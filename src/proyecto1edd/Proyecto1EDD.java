@@ -14,7 +14,8 @@ public class Proyecto1EDD {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Window w = new Window();
+        w.setVisible(true);
     }
     
 }
