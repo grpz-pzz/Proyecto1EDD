@@ -20,21 +20,6 @@ public class Main
         w.setVisible(true);
     }
     
-    public static class User
-    {
-        String username;
-        List relations = new List();
-    }
     
-    public static User SearchUser(String username)
-    {
-        Node current = Main.users.first();
-        while (current != null) {
-            if (username.equals(current.getData())) {
-                return (User)current.getData();
-            }
-            current = current.getNext();
-        }
-        return null;
-    }
+ 
 }
