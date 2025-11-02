@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import proyecto1edd.Main.User;
+
 /**
  *
  * @author biancazullo
@@ -89,37 +89,33 @@ public class Window extends javax.swing.JFrame {
                     
                     switch (type)
                     {
-                        case "usuarios":
-                        {
+                        case "usuarios" ->                         {
                             System.out.println(line);
                            
                             // Elimina el @
                             String temp = line.substring(1);
                             
                             // Crea la clase user
-                            User user = new User();
+                            User user = new User(temp);
                                 user.username = temp;
                                 
                             // Agrega User a la lista Users en Main
                             Main.users.insert(user);
-                                break;
                         }
-                        case "relaciones":
-                        {
+                        case "relaciones" ->                         {
                              // coma seguida de uno o más espacios para separar usuarios
                             String[] userNames = line.split(",\\s+");   
                             
                             String temp = line.substring(1);
-                            User mainUser = Main.SearchUser(temp);
+                            User mainUser = User.SearchUser(temp);
                             
                             for (int i = 1; i < userNames.length; i++) 
                             {
-                                User relationUser = Main.SearchUser(userNames[i]);         
+                                User relationUser = User.SearchUser(userNames[i]);         
                                 mainUser.relations.insert(relationUser);
                             }  
                             
                             System.out.println("Agregado " + mainUser.relations.length + " relaciones a usuario: " + mainUser.username);
-                            break;
                         }
                     }
                 }
