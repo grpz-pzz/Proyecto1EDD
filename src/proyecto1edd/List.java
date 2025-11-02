@@ -7,43 +7,69 @@ package proyecto1edd;
 /**
  *
  * @author biancazullo
+ * @param <T>
  */
-public class List {
-    Node<String> pFirst;
-    Node<String> pLast; 
-    int length; 
+public class List<T> {
+    Node<T> pFirst;
+    Node<T> pLast;
+    int length;
+
     public List(){
         this.pFirst = null;
         this.pLast = null;
         this.length = 0;
     }
-    public void insert(String data){
-        Node newNode = new Node(data);                        
+
+    public void insert(T data){
+        Node<T> newNode = new Node<>(data);
         if (this.pFirst == null){
             this.pFirst = newNode;
             this.pLast = this.pFirst;
-        }else{
+        } else {
             this.pLast.setNext(newNode);
             this.pLast = newNode;
-             
         }
-        this.length ++;
+        this.length++;
     }
-    public Node first(){
+
+    public Node<T> first(){
         return this.pFirst;
-    }       
-    public Node last(){
+    }
+
+    public Node<T> last(){
         return this.pLast;
     }
+
     public int length(){
         return this.length;
     }
-    public void delete(String m){
-        Node n = this.pFirst;
-        while (n != null){
-            if (n.getData()==m){
-                n = n.getNext();
+
+    public void delete(T m){
+        Node<T> current = pFirst;
+        Node<T> previous = null;
+
+        while (current != null){
+            if (current.getData().equals(m)){
+                if (previous == null){
+                    pFirst = current.getNext();
+                    if (pFirst == null) pLast = null;
+                } else {
+                    previous.setNext(current.getNext());
+                    if (current == pLast) pLast = previous;
+                }
+                length--;
+                return;
             }
-        }       
-    }    
+            previous = current;
+            current = current.getNext();
+        }
+    }
+
+    public void printList(){
+        Node<T> current = pFirst;
+        while (current != null){
+            System.out.println(current.getData());
+            current = current.getNext();
+        }
+    }
 }

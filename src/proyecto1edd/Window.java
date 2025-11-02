@@ -3,8 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package proyecto1edd;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import proyecto1edd.Main.User;
 /**
  *
  * @author biancazullo
@@ -43,16 +48,16 @@ public class Window extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(130, 130, 130)
-                .addComponent(uploadtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addGap(144, 144, 144)
+                .addComponent(uploadtxt)
+                .addContainerGap(149, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(109, 109, 109)
-                .addComponent(uploadtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addGap(114, 114, 114)
+                .addComponent(uploadtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(150, Short.MAX_VALUE))
         );
 
         pack();
@@ -64,10 +69,64 @@ public class Window extends javax.swing.JFrame {
         chooser.setFileFilter(filter);
         chooser.setMultiSelectionEnabled(false);
         int returnValue = chooser.showOpenDialog(null);
-        if (returnValue == JFileChooser.APPROVE_OPTION){
-            // usar archivo txt aca
+        if (returnValue == JFileChooser.APPROVE_OPTION)
+        {
+            File selectedFile = chooser.getSelectedFile();
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) 
+            { 
+                String line;
+                String type = "none"; //usuarios o relaciones
+                while ((line = reader.readLine()) != null) {
+                     // Si la linea no contiene '@' significa que lo proximo es ese tipo de dato
+                    if (!line.contains("@"))
+                    {
+                        System.out.println("Leyendo tipo de dato: " + line);
+
+                        type = line;
+                        continue; // hace que esta linea no haga nada mas y siga con la proxima
+                    }
+                    
+                    switch (type)
+                    {
+                        case "usuarios":
+                        {
+                            System.out.println(line);
+                           
+                            // Elimina el @
+                            String temp = line.substring(1);
+                            
+                            // Crea la clase user
+                            User user = new User();
+                                user.username = temp;
+                                
+                            // Agrega User a la lista Users en Main
+                            Main.users.insert(user);
+                                break;
+                        }
+                        case "relaciones":
+                        {
+                             // coma seguida de uno o más espacios para separar usuarios
+                            String[] userNames = line.split(",\\s+");   
+                            
+                            String temp = line.substring(1);
+                            User mainUser = Main.SearchUser(temp);
+                            
+                            for (int i = 1; i < userNames.length; i++) 
+                            {
+                                User relationUser = Main.SearchUser(userNames[i]);         
+                                mainUser.relations.insert(relationUser);
+                            }  
+                            
+                            System.out.println("Agregado " + mainUser.relations.length + " relaciones a usuario: " + mainUser.username);
+                            break;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-   
     }//GEN-LAST:event_uploadtxtActionPerformed
 
     /**
