@@ -13,13 +13,11 @@ public class List<T> {
     Node<T> pFirst;
     Node<T> pLast;
     int length;
-
     public List(){
         this.pFirst = null;
         this.pLast = null;
         this.length = 0;
     }
-
     public void insert(T data){
         Node newNode = new Node(data);
         if (this.pFirst == null){
@@ -31,23 +29,18 @@ public class List<T> {
         }
         this.length++;
     }
-
     public Node<T> first(){
         return this.pFirst;
     }
-
     public Node<T> last(){
         return this.pLast;
     }
-
     public int length(){
         return this.length;
     }
-
     public void delete(T m){
         Node<T> current = pFirst;
         Node<T> previous = null;
-
         while (current != null){
             if (current.getData().equals(m)){
                 if (previous == null){
@@ -67,7 +60,6 @@ public class List<T> {
             current = current.getNext();
         }
     }
-
     public void printList(){
         Node<T> current = pFirst;
         while (current != null){
@@ -99,6 +91,14 @@ public class List<T> {
         }
         return data;
     }
-    
-    
+    public boolean contains(T m){
+        Node<T> current = pFirst;
+        while (current != null){
+            if (current.getData().equals(m)){
+                return true;
+            }
+            current = current.getNext();
+        }
+        return false;
+    } 
 }
