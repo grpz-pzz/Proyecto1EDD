@@ -51,11 +51,14 @@ public class List<T> {
         while (current != null){
             if (current.getData().equals(m)){
                 if (previous == null){
-                    pFirst = current.getNext();
-                    if (pFirst == null) pLast = null;
+                    this.pFirst = current.getNext();
+                    if (pFirst == null){ 
+                        pLast = null;
+                    }
                 } else {
                     previous.setNext(current.getNext());
-                    if (current == pLast) pLast = previous;
+                    if (current == this.pLast) 
+                        this.pLast = previous;
                 }
                 length--;
                 return;
