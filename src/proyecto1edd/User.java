@@ -10,10 +10,11 @@ package proyecto1edd;
  */
 public class User {
     String username;
-    List relations = new List();
+    List<User> relations;
    
    public User(String username){
        this.username = username;
+       this.relations = new List<User>();
    }
    public String getUsername(){
        return username;
@@ -24,11 +25,11 @@ public class User {
    public void relation(User otherUser){
        this.relations.insert(otherUser);
    }
-   public static User SearchUser(String targetUser ){
-       Node current = Main.users.first();
+   public static User searchUser(String targetUser){
+       Node<User> current = Main.users.first();
        while (current != null){
-           User userInList = (User)current.getData();
-           if (targetUser == userInList.username){
+           User userInList = current.getData();
+           if (targetUser.equals(userInList.username)){
                return userInList;
            }
            current = current.getNext();          

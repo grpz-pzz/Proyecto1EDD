@@ -107,11 +107,11 @@ public class Window extends javax.swing.JFrame {
                             String[] userNames = line.split(",\\s+");   
                             
                             String temp = line.substring(1);
-                            User mainUser = User.SearchUser(temp);
+                            User mainUser = User.searchUser(temp);
                             
                             for (int i = 1; i < userNames.length; i++) 
                             {
-                                User relationUser = User.SearchUser(userNames[i]);         
+                                User relationUser = User.searchUser(userNames[i]);         
                                 mainUser.relations.insert(relationUser);
                             }  
                             
@@ -154,6 +154,7 @@ public class Window extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Window().setVisible(true);
             }

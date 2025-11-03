@@ -21,7 +21,7 @@ public class List<T> {
     }
 
     public void insert(T data){
-        Node<T> newNode = new Node<>(data);
+        Node newNode = new Node(data);
         if (this.pFirst == null){
             this.pFirst = newNode;
             this.pLast = this.pFirst;
@@ -72,4 +72,30 @@ public class List<T> {
             current = current.getNext();
         }
     }
+    public void insertFirst(T data){
+        Node newNode = new Node(data);
+        if (this.pFirst == null){
+            this.pFirst = newNode;
+            this.pLast = newNode;
+        }else{
+            newNode.setNext(this.pFirst);
+            this.pFirst = newNode;
+        }
+        this.length++;
+    }
+    public T deleteFirst(){
+        if (this.pFirst == null){
+            return null;
+        }
+        T data = this.pFirst.getData();
+        this.pFirst= this.pFirst.getNext();
+        this.length--;
+        
+        if (this.pFirst == null){
+            this.pLast = null;
+        }
+        return data;
+    }
+    
+    
 }
