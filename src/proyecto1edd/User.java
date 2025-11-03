@@ -21,6 +21,9 @@ public class User {
    public List getRelations(){
        return relations;     
    }
+   public void relation(User otherUser){
+       this.relations.insert(otherUser);
+   }
    public static User SearchUser(String targetUser ){
        Node current = Main.users.first();
        while (current != null){
