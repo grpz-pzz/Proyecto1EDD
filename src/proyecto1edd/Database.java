@@ -14,14 +14,14 @@ public class Database
     private static List users = new List();
 
     /**
-    * Agrega un nuevo usuario a la base de datos
+    * adds a user to the database
     * <p>
-    * Este método recorre la lista de usuarios y verifica si el nombre de usuario ya está registrado.
-    * Si no se encuentra, crea un nuevo objeto {@code User} y lo inserta en la lista.
-    * Si el usuario ya existe, se muestra un mensaje en consola.
+    * this method iterates the user list and verifies if the username is s\already registered 
+    * if it is not found create a new object {@code User} and inserts it in the list.
+    * if the user exists show a message.
     *
      * @param user
-    * @return retorna verdadero si se agrego correctamente
+    * @return return true if user added successfully
     */
     public static boolean AddUser(User user) {
         Node<User> current = users.first();
