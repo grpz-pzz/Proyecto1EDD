@@ -25,7 +25,7 @@ public class KosarajuAlgorithm {
     private void secondDFS (User user, List<User> visited, List<User> currentSCC){
         visited.insert(user);
         currentSCC.insert(user);
-        Node<User> allUsersNode = Main.users.first();
+        Node<User> allUsersNode = Database.GetUsers().first();
         while (allUsersNode != null){
             User potentialPredecessor = allUsersNode.getData();
             if (potentialPredecessor.getRelations().contains(user) && !visited.contains(potentialPredecessor)){

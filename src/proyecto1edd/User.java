@@ -14,7 +14,7 @@ public class User {
    
    public User(String username){
        this.username = username;
-       this.relations = new List<User>();
+       this.relations = new List<>();
    }
    public String getUsername(){
        return username;
@@ -24,18 +24,6 @@ public class User {
    }
    public void relation(User otherUser){
        this.relations.insert(otherUser);
-   }
-   public static User searchUser(String targetUser){
-       Node<User> current = Main.users.first();
-       while (current != null){
-           User userInList = current.getData();
-           if (targetUser.equals(userInList.username)){
-               return userInList;
-           }
-           current = current.getNext();          
-       }
-       return null;
-       
    }
    
 }

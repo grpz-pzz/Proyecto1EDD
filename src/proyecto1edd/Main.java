@@ -8,10 +8,8 @@ package proyecto1edd;
  *
  * @author gianc
  */
-public class Main 
+public class Main
 {
-    public static List users = new List();
-
     /**
      * @param args the command line arguments
      */
@@ -19,7 +17,4 @@ public class Main
         Window w = new Window();
         w.setVisible(true);
     }
-    
-    
- 
 }
