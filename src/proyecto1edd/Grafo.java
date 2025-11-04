@@ -21,7 +21,7 @@ public class Grafo
         Graph graph = new SingleGraph("grafo");
 
         // Paso 1: Agregar nodos
-        Node<User> current = Database.GetUsers().first();
+        Node<User> current = Database.getUsers().first();
         while (current != null) {
             User user = current.getData();
             if (graph.getNode(user.username) == null) {
@@ -31,9 +31,9 @@ public class Grafo
         }
 
         // Paso 2: Agregar aristas evitando duplicados
-        Set<String> aristasAgregadas = new HashSet<>();
+        Set<String> addedAxes = new HashSet<>();
 
-        Node<User> current1 = Database.GetUsers().first();
+        Node<User> current1 = Database.getUsers().first();
         while (current1 != null) {
             User user = current1.getData();
 
@@ -47,15 +47,15 @@ public class Grafo
                 }
 
                 // Crear ID único para la arista
-                String idArista = user.username + "-" + relationUser.username;
+                String idAxis = user.username + "-" + relationUser.username;
 
                 // Evitar duplicados
-                if (!aristasAgregadas.contains(idArista)) {
+                if (!addedAxes.contains(idAxis)) {
                     try {
-                        graph.addEdge(idArista, user.username, relationUser.username, true); // true = dirigida
-                        aristasAgregadas.add(idArista);
+                        graph.addEdge(idAxis, user.username, relationUser.username, true); // true = dirigida
+                        addedAxes.add(idAxis);
                     } catch (Exception e) {
-                        System.err.println("Error al agregar arista: " + idArista);
+                        System.err.println("Error al agregar arista: " + idAxis);
                     }
                 }
 

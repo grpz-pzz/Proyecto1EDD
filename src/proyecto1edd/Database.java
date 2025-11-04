@@ -20,7 +20,7 @@ public class Database
     * Si no se encuentra, crea un nuevo objeto {@code User} y lo inserta en la lista.
     * Si el usuario ya existe, se muestra un mensaje en consola.
     *
-    * @param username el nombre de usuario que se desea agregar
+     * @param user
     * @return retorna verdadero si se agrego correctamente
     */
     public static boolean AddUser(User user) {
@@ -34,24 +34,24 @@ public class Database
             current = current.getNext();
         }
 
-        GetUsers().insert(user);
+        getUsers().insert(user);
         System.out.println("Usuario agregado: " + user.username);
         return true;
     }
 
 
-    public static List GetUsers() {
+    public static List getUsers() {
         return users;
     }
     
     public static void DeleteUser(User user)
     {
-        // Solo test
+        getUsers().delete(user);
         System.out.print("Eliminado " + user.username);
     }
 
     public static User SearchUser(String targetUser) {
-        Node<User> current = Database.GetUsers().first();
+        Node<User> current = Database.getUsers().first();
         while (current != null) {
             User userInList = current.getData();
             if (targetUser.equals(userInList.username)) {
