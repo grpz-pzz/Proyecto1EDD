@@ -21,10 +21,11 @@ public class Window extends javax.swing.JFrame {
     // Map de Users por claves Usernames, solamente auxiliar para la interfaz y ahorrar recursos
     private Map<String, User> tempUsers = new Map<>();
     private User selected;
+    private User selectedFirst;
     private Grafo graph;
     private String loadedFilePath = "";
     private DefaultListModel<String> modeloLista = new DefaultListModel<>();
-
+    private boolean selectingUser = false;
     
     public Window() {
         initComponents();
@@ -80,8 +81,13 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
-        editButton.setText("Editar...");
+        editButton.setText("Relacionar con");
         editButton.setEnabled(false);
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
 
         delButton.setText("Eliminar");
         delButton.setEnabled(false);
@@ -129,7 +135,7 @@ public class Window extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(uploadtxt))
-                .addContainerGap(511, Short.MAX_VALUE))
+                .addContainerGap(471, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,7 +236,7 @@ public class Window extends javax.swing.JFrame {
             String tempSelected = jList1.getModel().getElementAt(index);
             
             // Obtiene el User del hashmap
-            selected = tempUsers.get(tempSelected);
+            selected = Database.searchUser(tempSelected);
 
             // Se activan los botones cuando se selecciona un item
             // Es asi para que no se llame setEnabled ineccesariamente y
@@ -242,10 +248,16 @@ public class Window extends javax.swing.JFrame {
             }
             
             isSelected = true;
+            System.out.println("Usuario seleccionado: " + selected.getUsername());
         }
     }//GEN-LAST:event_jList1MouseReleased
 
     private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed
+        if(selectedFirst == selected) {
+            selectedFirst = null;
+            selectingUser = false;
+        }
+        
         this.graph.removeUserNode(selected);
         modeloLista.removeElement(selected.getUsername());
         Database.deleteUser(selected);
@@ -254,8 +266,10 @@ public class Window extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String username = JOptionPane.showInputDialog(this, "Introduzca el nombre del nuevo usuario a crear (sin @):", "Crear nuevo usuario", JOptionPane.INFORMATION_MESSAGE);
-        if(username.isBlank())
+        if(username.isBlank()) {
+            JOptionPane.showMessageDialog(this, "El nombre de usuario no puede estar en blanco.");
             return;
+        }
         
         if(Database.searchUser(username) != null) {
             JOptionPane.showMessageDialog(this, "Ya existe un usuario con ese nombre.");
@@ -265,7 +279,41 @@ public class Window extends javax.swing.JFrame {
         User newUser = new User(username);
         Database.addUser(newUser);
         this.graph.addUserNode(newUser);
+        addToList(username);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        if(!selectingUser) {
+            selectedFirst = selected;
+            selectingUser = true;
+            System.out.println("" + selectedFirst);
+            JOptionPane.showMessageDialog(this, "Selecciona otro usuario y vuelve a presionar el botón para agregar una relación.");
+        } else {
+            if(selected == null) {
+                JOptionPane.showMessageDialog(this, "No seleccionaste un usuario al que agregar la relación.");
+                return;
+            }
+            
+            if(selectedFirst == selected) {
+                JOptionPane.showMessageDialog(this, "No puedes agregar una relación al mismo usuario.");
+                return;
+            }
+            
+            if(this.graph.relationExists(selectedFirst, selected))
+            {
+                JOptionPane.showMessageDialog(this, "Ya existe una relación entre " + selectedFirst.getUsername() + " a " + selected.getUsername());
+                return;
+            }
+            
+            System.out.println("" + selectedFirst);
+            System.out.println("" + selected);
+            
+            selectingUser = false;
+            selectedFirst.getRelations().insert(selected);
+            this.graph.addRelation(selectedFirst, selected);
+            JOptionPane.showMessageDialog(this, "Relación creada: " + selectedFirst.getUsername() + " -> " + selected.getUsername());
+        }
+    }//GEN-LAST:event_editButtonActionPerformed
 
 
     public void addToList(String text)

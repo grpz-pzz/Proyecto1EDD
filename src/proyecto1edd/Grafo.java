@@ -124,4 +124,20 @@ public class Grafo
             userNode = userNode.getNext();
         }
     }
+    
+    public boolean relationExists(User user1, User user2) {
+        String edgeName = user1.getUsername() + user2.getUsername();
+        return this.graph.getEdge(edgeName) != null;
+    }
+    
+    public void addRelation(User user1, User user2) {
+        String edgeName = user1.getUsername() + user2.getUsername();
+        
+        try {
+            this.graph.addEdge(edgeName, user1.getUsername(), user2.getUsername(), true);
+            this.executeKosarajuAlgorithm();
+        } catch(Exception e) {
+            System.err.println("Error creando eje: " + edgeName + " (" + e.toString() + ")");
+        }
+    }
 }
