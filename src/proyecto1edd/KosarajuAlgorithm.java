@@ -9,52 +9,77 @@ package proyecto1edd;
  * @author biancazullo
  */
 public class KosarajuAlgorithm {
-    
-    private void firstDFS(User user, List<User> visited, Stack<User> stack){
+    private static void firstDFS(User user, List<User> visited, Stack<User> stack) {
+        if (visited.contains(user)) {
+            return;
+        }
+        
         visited.insert(user);
-        Node <User> currentRelationNode = user.getRelations().first();
-        while (currentRelationNode != null){
-            User neighbor = currentRelationNode.getData();
-            if (!visited.contains(neighbor)){
+
+        List<User> neighbors = user.getRelations();
+        Node<User> neighborNode = neighbors.first();
+
+        while (neighborNode != null) {
+            User neighbor = neighborNode.getData();
+            if (!visited.contains(neighbor)) {
                 firstDFS(neighbor, visited, stack);
             }
-            currentRelationNode = currentRelationNode.getNext();    
+            neighborNode = neighborNode.getNext();
         }
+
         stack.push(user);
     }
-    private void secondDFS (User user, List<User> visited, List<User> currentSCC){
+
+    private static void secondDFS(User user, List<User> visited, List<User> currentSCC, List<User> allUsers) {
+        if (visited.contains(user)) {
+            return;
+        }
         visited.insert(user);
         currentSCC.insert(user);
-        Node<User> allUsersNode = Database.getUsers().first();
-        while (allUsersNode != null){
+
+        Node<User> allUsersNode = allUsers.first();
+        while (allUsersNode != null) {
             User potentialPredecessor = allUsersNode.getData();
-            if (potentialPredecessor.getRelations().contains(user) && !visited.contains(potentialPredecessor)){
-                secondDFS(potentialPredecessor, visited, currentSCC);
+
+            if (potentialPredecessor.getRelations().contains(user)) {
+                
+                if (!visited.contains(potentialPredecessor)) {
+                    secondDFS(potentialPredecessor, visited, currentSCC, allUsers);
+                }
             }
             allUsersNode = allUsersNode.getNext();
         }
     }
-    public List<List<User>> findSCCs(List<User> allUsers){
+
+    public static List<List<User>> findSCCs() {
+        List<User> allUsers = Database.getUsers();
+
         Stack<User> stack = new Stack<>();
-        List<User> visited = new List<>();
+        List<User> visitedPass1 = new List<>();
+
         Node<User> currentNode = allUsers.first();
-        while (currentNode != null){
+        while (currentNode != null) {
             User user = currentNode.getData();
-            if(!visited.contains(user)){
-                firstDFS(user, visited, stack);               
+            if (!visitedPass1.contains(user)) {
+                firstDFS(user, visitedPass1, stack);
             }
-            currentNode= currentNode.getNext();
+            currentNode = currentNode.getNext();
         }
-        visited = new List<>();
-        List<List<User>> sccs = new List<>();
-        while (!stack.isEmpty()){
+        
+        List<List<User>> allSCCs = new List<>();
+        List<User> visitedPass2 = new List<>();
+
+        while (!stack.isEmpty()) {
             User user = stack.pop();
-            if (!visited.contains(user)){
+
+            if (!visitedPass2.contains(user)) {
                 List<User> currentSCC = new List<>();
-                secondDFS(user, visited, currentSCC);
-                sccs.insert(currentSCC);               
+                
+                secondDFS(user, visitedPass2, currentSCC, allUsers);
+                
+                allSCCs.insert(currentSCC);
             }
         }
-        return sccs;
+        return allSCCs;
     }
 }

@@ -101,4 +101,61 @@ public class List<T> {
         }
         return false;
     } 
+    public T get(int index) {
+        if(index >= this.length)
+            return null;
+        
+        Node<T> temp = this.pFirst;
+        for(int i = 0; i < index; ++i) {
+            temp = temp.getNext();
+        }
+        
+        return temp.getData();
+    }
+    
+    public void set(int index, T value) {
+        if(index >= this.length)
+            return;
+        
+        Node<T> n = this.pFirst;
+        
+        for(int i = 0; i <= index; i++)
+        {
+            n = n.getNext();
+        }
+        
+        n.setData(value);
+    }
+    
+    public int getIdxOf(T value) {
+        if(this.pFirst == null)
+            return -1;
+        
+        Node<T> temp = this.pFirst;
+        int i = 0;
+        
+        while(temp != null) {
+            if(temp.getData().equals(value))
+                return i;
+            
+            temp = temp.getNext();
+            i++;
+        }
+        
+        return -1;
+    }
+    
+    public String asString() {
+        String s = "[";
+        Node<T> n = this.pFirst;
+        while(n != null) {
+            s += n.getData();
+            s += ", ";
+            n = n.getNext();
+        }
+        
+        s = s.substring(0, s.length() - 2);
+        s += "]";
+        return s;
+    }
 }

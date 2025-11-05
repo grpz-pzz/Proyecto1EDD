@@ -11,7 +11,7 @@ package proyecto1edd;
 public class Database 
 {
 
-    private static List users = new List();
+    private static List<User> users = new List();
 
     /**
     * adds a user to the database
@@ -40,7 +40,7 @@ public class Database
     }
 
 
-    public static List getUsers() {
+    public static List<User> getUsers() {
         return users;
     }
     

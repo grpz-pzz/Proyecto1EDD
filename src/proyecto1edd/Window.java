@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -19,7 +18,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Window extends javax.swing.JFrame {
 
     // Map de Users por claves Usernames, solamente auxiliar para la interfaz y ahorrar recursos
-    private HashMap<String, User> tempUsers = new HashMap<>();
+    private Map<String, User> tempUsers = new Map<>();
     private User selected;
     
     public Window() {
@@ -161,7 +160,7 @@ public class Window extends javax.swing.JFrame {
                     
                     switch (type)
                     {
-                        case "usuarios" ->{
+                        case "usuarios": {
                             System.out.println(line);
                            
                             // Elimina el carcater '@'
@@ -171,7 +170,7 @@ public class Window extends javax.swing.JFrame {
                             User newUser = new User(temp);
                             
                             // Añade newUser a un hashmap auxiliar
-                            tempUsers.put(temp, newUser);
+                            tempUsers.insert(temp, newUser);
                             
                             // Añade newUser a la lista de la interfaz
                             AddToList(temp);
@@ -181,8 +180,7 @@ public class Window extends javax.swing.JFrame {
                             break;
                         }
                         
-                        case "relaciones" ->   
-                        {
+                        case "relaciones": {
                             
                              // Coma seguida de uno o más espacios para separar usuarios
                             String[] userNames = line.split(",\\s+");   

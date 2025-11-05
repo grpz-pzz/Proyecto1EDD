@@ -11,7 +11,7 @@ package proyecto1edd;
 public class User {
     String username;
     List<User> relations;
-   
+    
    public User(String username){
        this.username = username;
        this.relations = new List<>();
@@ -25,5 +25,4 @@ public class User {
    public void relation(User otherUser){
        this.relations.insert(otherUser);
    }
-   
 }
