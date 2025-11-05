@@ -61,4 +61,13 @@ public class Database
         }
         return null;
     }
+    
+    public static void resetVisited() {
+        Node<User> n = Database.getUsers().first();
+        while(n != null) {
+            n.getData().setVisited(false);
+            n = n.getNext();
+        }
+        
+    }
 }

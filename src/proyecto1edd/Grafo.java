@@ -19,7 +19,12 @@ public class Grafo
         System.setProperty("org.graphstream.ui", "swing");
 
         Graph graph = new SingleGraph("grafo");
-
+        graph.setAttribute("ui.stylesheet", 
+                "node { " +
+                        "size: 20px; " +
+                "}"
+        );
+        
         // Paso 1: Agregar nodos
         Node<User> current = Database.getUsers().first();
         while (current != null) {
@@ -66,9 +71,9 @@ public class Grafo
         }
         
         String[] colors = {
-        "red", "blue", "green", "orange", "purple", 
-        "yellow", "pink", "cyan", "magenta", "brown"
-    };
+            "red", "blue", "green", "orange", "purple", 
+            "yellow", "pink", "cyan", "magenta", "brown"
+        };
       
         int colorIndex = 0;
         List<List<User>> l = KosarajuAlgorithm.findSCCs();

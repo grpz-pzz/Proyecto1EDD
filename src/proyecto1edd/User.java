@@ -11,10 +11,12 @@ package proyecto1edd;
 public class User {
     String username;
     List<User> relations;
+    private boolean visited;
     
    public User(String username){
        this.username = username;
        this.relations = new List<>();
+       this.visited = false;
    }
    public String getUsername(){
        return username;
@@ -24,5 +26,11 @@ public class User {
    }
    public void relation(User otherUser){
        this.relations.insert(otherUser);
+   }
+   public boolean beenVisited() {
+       return visited;
+   }
+   public void setVisited(boolean set) {
+       this.visited = set;
    }
 }

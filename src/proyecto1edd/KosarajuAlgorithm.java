@@ -9,20 +9,19 @@ package proyecto1edd;
  * @author biancazullo
  */
 public class KosarajuAlgorithm {
-    private static void firstDFS(User user, List<User> visited, Stack<User> stack) {
-        if (visited.contains(user)) {
+    private static void firstDFS(User user, Stack<User> stack) {
+        if(user.beenVisited())
             return;
-        }
         
-        visited.insert(user);
+        user.setVisited(true);
 
         List<User> neighbors = user.getRelations();
         Node<User> neighborNode = neighbors.first();
 
         while (neighborNode != null) {
             User neighbor = neighborNode.getData();
-            if (!visited.contains(neighbor)) {
-                firstDFS(neighbor, visited, stack);
+            if (!neighbor.beenVisited()) {
+                firstDFS(neighbor, stack);
             }
             neighborNode = neighborNode.getNext();
         }
@@ -30,11 +29,11 @@ public class KosarajuAlgorithm {
         stack.push(user);
     }
 
-    private static void secondDFS(User user, List<User> visited, List<User> currentSCC, List<User> allUsers) {
-        if (visited.contains(user)) {
+    private static void secondDFS(User user, List<User> currentSCC, List<User> allUsers) {
+        if(user.beenVisited())
             return;
-        }
-        visited.insert(user);
+        
+        user.setVisited(true);
         currentSCC.insert(user);
 
         Node<User> allUsersNode = allUsers.first();
@@ -43,8 +42,8 @@ public class KosarajuAlgorithm {
 
             if (potentialPredecessor.getRelations().contains(user)) {
                 
-                if (!visited.contains(potentialPredecessor)) {
-                    secondDFS(potentialPredecessor, visited, currentSCC, allUsers);
+                if (!potentialPredecessor.beenVisited()) {
+                    secondDFS(potentialPredecessor, currentSCC, allUsers);
                 }
             }
             allUsersNode = allUsersNode.getNext();
@@ -55,27 +54,27 @@ public class KosarajuAlgorithm {
         List<User> allUsers = Database.getUsers();
 
         Stack<User> stack = new Stack<>();
-        List<User> visitedPass1 = new List<>();
+        Database.resetVisited();
 
         Node<User> currentNode = allUsers.first();
         while (currentNode != null) {
             User user = currentNode.getData();
-            if (!visitedPass1.contains(user)) {
-                firstDFS(user, visitedPass1, stack);
+            if (!user.beenVisited()) {
+                firstDFS(user, stack);
             }
             currentNode = currentNode.getNext();
         }
         
         List<List<User>> allSCCs = new List<>();
-        List<User> visitedPass2 = new List<>();
+        Database.resetVisited();
 
         while (!stack.isEmpty()) {
             User user = stack.pop();
 
-            if (!visitedPass2.contains(user)) {
+            if (!user.beenVisited()) {
                 List<User> currentSCC = new List<>();
                 
-                secondDFS(user, visitedPass2, currentSCC, allUsers);
+                secondDFS(user, currentSCC, allUsers);
                 
                 allSCCs.insert(currentSCC);
             }
