@@ -22,14 +22,14 @@ public class Window extends javax.swing.JFrame {
     private Map<String, User> tempUsers = new Map<>();
     private User selected;
     private User selectedFirst;
-    private Grafo graph;
+    private GraphManager graph;
     private String loadedFilePath = "";
-    private DefaultListModel<String> modeloLista = new DefaultListModel<>();
+    private DefaultListModel<String> modelList = new DefaultListModel<>();
     private boolean selectingUser = false;
     
     public Window() {
         initComponents();
-        jList1.setModel(modeloLista);
+        jList1.setModel(modelList);
     }
 
     @SuppressWarnings("unchecked")
@@ -46,6 +46,7 @@ public class Window extends javax.swing.JFrame {
         editButton = new javax.swing.JButton();
         delButton = new javax.swing.JButton();
         removeRelation = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -106,6 +107,8 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Guardar");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -122,7 +125,9 @@ public class Window extends javax.swing.JFrame {
                         .addComponent(removeRelation)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(delButton)))
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,7 +137,8 @@ public class Window extends javax.swing.JFrame {
                     .addComponent(jButton1)
                     .addComponent(editButton)
                     .addComponent(delButton)
-                    .addComponent(removeRelation))
+                    .addComponent(removeRelation)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addContainerGap())
@@ -147,7 +153,7 @@ public class Window extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(uploadtxt))
-                .addContainerGap(425, Short.MAX_VALUE))
+                .addContainerGap(409, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,7 +237,7 @@ public class Window extends javax.swing.JFrame {
                 }
                 
                 this.uploadtxt.setEnabled(false);
-                this.graph = new Grafo();
+                this.graph = new GraphManager();
                 this.graph.start();
                 
             } catch (IOException e) {
@@ -272,7 +278,7 @@ public class Window extends javax.swing.JFrame {
         }
         
         this.graph.removeUserNode(selected);
-        modeloLista.removeElement(selected.getUsername());
+        modelList.removeElement(selected.getUsername());
         Database.deleteUser(selected);
         this.graph.executeKosarajuAlgorithm();
     }//GEN-LAST:event_delButtonActionPerformed
@@ -370,13 +376,14 @@ public class Window extends javax.swing.JFrame {
 
     public void addToList(String text)
     {
-       modeloLista.addElement(text);
+       modelList.addElement(text);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton delButton;
     private javax.swing.JButton editButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JList<String> jList1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;

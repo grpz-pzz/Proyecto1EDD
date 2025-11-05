@@ -6,15 +6,16 @@ package proyecto1edd;
 
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
-
+import org.graphstream.ui.view.Viewer;
+import java.util.Random;
 /**
  *
  * @author gianc
  */
-public class Grafo 
+public class GraphManager 
 {
     private Graph graph;
-    
+    private Random r = new Random();
     public void start() {
         System.setProperty("org.graphstream.ui", "swing");
 
@@ -25,6 +26,7 @@ public class Grafo
                         "size: 75px; " +
                 "}"
         );
+        
         
         // Paso 1: Agregar nodos
         Node<User> current = Database.getUsers().first();
@@ -71,11 +73,18 @@ public class Grafo
         }
         
         this.executeKosarajuAlgorithm();
-        graph.display();
+        Viewer viewer = graph.display();
+        viewer.enableAutoLayout();
     }
-    
-    public void addUserNode(User user) {
-        this.graph.addNode(user.getUsername()).setAttribute("ui.label", user.getUsername());
+    private static final String[]  isolatedNodeColors ={ "#9ca399", "#a39999", "#9fabab", "#a4a5b0", "#aea7b5"
+        
+    };
+    public void addUserNode(User user) {       
+        org.graphstream.graph.Node newNode = this.graph.addNode(user.getUsername());
+        newNode.setAttribute("ui.label", user.getUsername());
+        String randomColor = isolatedNodeColors[r.nextInt(isolatedNodeColors.length)];
+        String style = String.format("fill-color: %s;", isolatedNodeColors);
+        newNode.setAttribute("ui.style", style);             
     }
     
     public void removeUserNode(User user) {
@@ -84,8 +93,8 @@ public class Grafo
     
     public void executeKosarajuAlgorithm() {
         String[] colors = {
-            "#9fabb3", "#9fa1c9", "#6990cf", "#dbd8a2", "#d99eb6", 
-            "#ebc38a", "#91bf95", "#6aa1a8", "#787265"
+            "#e89797", "#dba4c4", "#b8a4db", "#8f99cc", "#7eb5cc", 
+            "#8fb5ac", "#91c299", "#bec291", "#c2ab91"
         };
         
         this.resetNodeColors();
@@ -136,6 +145,8 @@ public class Grafo
         try {
             this.graph.addEdge(edgeName, user1.getUsername(), user2.getUsername(), true);
             this.executeKosarajuAlgorithm();
+            Viewer viewer = graph.display();
+            viewer.enableAutoLayout();
         } catch(Exception e) {
             System.err.println("Error creando eje: " + edgeName + " (" + e.toString() + ")");
         }
@@ -147,6 +158,8 @@ public class Grafo
         try {
             this.graph.removeEdge(edgeName);
             this.executeKosarajuAlgorithm();
+            Viewer viewer = graph.display();
+            viewer.enableAutoLayout();
         } catch(ElementNotFoundException e) {
             System.err.println("Error eliminando eje: " + edgeName + " (" + e.toString() + ")");
         }
