@@ -4,8 +4,6 @@
  */
 package proyecto1edd;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 
@@ -15,13 +13,16 @@ import org.graphstream.graph.implementations.*;
  */
 public class Grafo 
 {
-    public void Start() {
+    private Graph graph;
+    
+    public void start() {
         System.setProperty("org.graphstream.ui", "swing");
 
-        Graph graph = new SingleGraph("grafo");
+        this.graph = new SingleGraph("grafo");
         graph.setAttribute("ui.stylesheet", 
                 "node { " +
-                        "size: 20px; " +
+                        "text-size: 25; " +
+                        "size: 75px; " +
                 "}"
         );
         
@@ -35,8 +36,6 @@ public class Grafo
             current = current.getNext();
         }
 
-        // Paso 2: Agregar aristas evitando duplicados
-        Set<String> addedAxes = new HashSet<>();
 
         Node<User> current1 = Database.getUsers().first();
         while (current1 != null) {
@@ -53,14 +52,15 @@ public class Grafo
 
                 // Crear ID único para la arista
                 String idAxis = user.username + "-" + relationUser.username;
-
+                org.graphstream.graph.Edge edge = graph.getEdge(idAxis);
+                
                 // Evitar duplicados
-                if (!addedAxes.contains(idAxis)) {
+                if (edge == null) {
                     try {
                         graph.addEdge(idAxis, user.username, relationUser.username, true); // true = dirigida
-                        addedAxes.add(idAxis);
                     } catch (Exception e) {
                         System.err.println("Error al agregar arista: " + idAxis);
+                        System.err.println(e.toString());
                     }
                 }
 
@@ -70,11 +70,26 @@ public class Grafo
             current1 = current1.getNext();
         }
         
+        this.executeKosarajuAlgorithm();
+        graph.display();
+    }
+    
+    public void addUserNode(User user) {
+        this.graph.addNode(user.getUsername()).setAttribute("ui.label", user.getUsername());
+    }
+    
+    public void removeUserNode(User user) {
+        this.graph.removeNode(user.getUsername());
+    }
+    
+    public void executeKosarajuAlgorithm() {
         String[] colors = {
-            "red", "blue", "green", "orange", "purple", 
-            "yellow", "pink", "cyan", "magenta", "brown"
+            "#9fabb3", "#9fa1c9", "#6990cf", "#dbd8a2", "#d99eb6", 
+            "#ebc38a", "#91bf95", "#6aa1a8", "#787265"
         };
-      
+        
+        this.resetNodeColors();
+        
         int colorIndex = 0;
         List<List<User>> l = KosarajuAlgorithm.findSCCs();
         System.out.println(l.asString());
@@ -94,11 +109,19 @@ public class Grafo
                 userInSCC = userInSCC.getNext();
             }
             
-            listNode = listNode.getNext();
             colorIndex++;
+            listNode = listNode.getNext();
         }
-        
-        graph.display();
     }
-
+    
+    public void resetNodeColors() {
+        Node<User> userNode = Database.getUsers().first();
+        while(userNode != null) {
+            org.graphstream.graph.Node graphNode = this.graph.getNode(userNode.getData().getUsername());
+            if(graphNode != null) {
+                graphNode.removeAttribute("ui.style");
+            }
+            userNode = userNode.getNext();
+        }
+    }
 }

@@ -23,7 +23,7 @@ public class Database
      * @param user
     * @return return true if user added successfully
     */
-    public static boolean AddUser(User user) {
+    public static boolean addUser(User user) {
         Node<User> current = users.first();
         while (current != null) {
             User temp = current.getData();
@@ -44,13 +44,13 @@ public class Database
         return users;
     }
     
-    public static void DeleteUser(User user)
+    public static void deleteUser(User user)
     {
         getUsers().delete(user);
         System.out.print("Eliminado " + user.username);
     }
 
-    public static User SearchUser(String targetUser) {
+    public static User searchUser(String targetUser) {
         Node<User> current = Database.getUsers().first();
         while (current != null) {
             User userInList = current.getData();

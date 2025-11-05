@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -20,6 +21,10 @@ public class Window extends javax.swing.JFrame {
     // Map de Users por claves Usernames, solamente auxiliar para la interfaz y ahorrar recursos
     private Map<String, User> tempUsers = new Map<>();
     private User selected;
+    private Grafo graph;
+    private String loadedFilePath = "";
+    private DefaultListModel<String> modeloLista = new DefaultListModel<>();
+
     
     public Window() {
         initComponents();
@@ -69,6 +74,11 @@ public class Window extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jList1);
 
         jButton1.setText("Crear...");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         editButton.setText("Editar...");
         editButton.setEnabled(false);
@@ -173,10 +183,10 @@ public class Window extends javax.swing.JFrame {
                             tempUsers.insert(temp, newUser);
                             
                             // Añade newUser a la lista de la interfaz
-                            AddToList(temp);
+                            addToList(temp);
                             
                             // Añade newUser a la lista principal de los usuarios
-                            Database.AddUser(newUser);
+                            Database.addUser(newUser);
                             break;
                         }
                         
@@ -189,10 +199,10 @@ public class Window extends javax.swing.JFrame {
                             String temp = userNames[0].substring(1);
                             
                             // Buscar usuario al que se le añadira las relaciones
-                            User mainUser = Database.SearchUser(temp);
+                            User mainUser = Database.searchUser(temp);
                             
                             // Buscar usuario para añadirlo como relacion
-                            User relationUser = Database.SearchUser(userNames[1].substring(1));
+                            User relationUser = Database.searchUser(userNames[1].substring(1));
                             mainUser.relations.insert(relationUser); 
                             
                             System.out.println("Agregado " + relationUser.username + " a " + mainUser.username);
@@ -202,8 +212,9 @@ public class Window extends javax.swing.JFrame {
                     }
                 }
                 
-                Grafo grafo = new Grafo();
-                grafo.Start();
+                this.uploadtxt.setEnabled(false);
+                this.graph = new Grafo();
+                this.graph.start();
                 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -235,50 +246,31 @@ public class Window extends javax.swing.JFrame {
     }//GEN-LAST:event_jList1MouseReleased
 
     private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed
-        Database.DeleteUser(selected);
+        this.graph.removeUserNode(selected);
+        modeloLista.removeElement(selected.getUsername());
+        Database.deleteUser(selected);
+        this.graph.executeKosarajuAlgorithm();
     }//GEN-LAST:event_delButtonActionPerformed
 
-    private DefaultListModel<String> modeloLista = new DefaultListModel<>();
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String username = JOptionPane.showInputDialog(this, "Introduzca el nombre del nuevo usuario a crear (sin @):", "Crear nuevo usuario", JOptionPane.INFORMATION_MESSAGE);
+        if(username.isBlank())
+            return;
+        
+        if(Database.searchUser(username) != null) {
+            JOptionPane.showMessageDialog(this, "Ya existe un usuario con ese nombre.");
+            return;
+        }
+        
+        User newUser = new User(username);
+        Database.addUser(newUser);
+        this.graph.addUserNode(newUser);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
-    public void AddToList(String text)
+
+    public void addToList(String text)
     {
        modeloLista.addElement(text);
-    }
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new Window().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
