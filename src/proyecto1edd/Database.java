@@ -46,15 +46,15 @@ public class Database
     
     public static void deleteUser(User user)
     {
+        System.out.print("Eliminado " + user.getUsername());
         getUsers().delete(user);
-        System.out.print("Eliminado " + user.username);
     }
 
     public static User searchUser(String targetUser) {
         Node<User> current = Database.getUsers().first();
         while (current != null) {
             User userInList = current.getData();
-            if (targetUser.equals(userInList.username)) {
+            if (targetUser.equals(userInList.getUsername())) {
                 return userInList;
             }
             current = current.getNext();

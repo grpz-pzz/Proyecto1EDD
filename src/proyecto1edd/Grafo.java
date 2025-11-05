@@ -126,18 +126,29 @@ public class Grafo
     }
     
     public boolean relationExists(User user1, User user2) {
-        String edgeName = user1.getUsername() + user2.getUsername();
+        String edgeName = user1.getUsername() + "-" + user2.getUsername();
         return this.graph.getEdge(edgeName) != null;
     }
     
     public void addRelation(User user1, User user2) {
-        String edgeName = user1.getUsername() + user2.getUsername();
+        String edgeName = user1.getUsername() + "-" + user2.getUsername();
         
         try {
             this.graph.addEdge(edgeName, user1.getUsername(), user2.getUsername(), true);
             this.executeKosarajuAlgorithm();
         } catch(Exception e) {
             System.err.println("Error creando eje: " + edgeName + " (" + e.toString() + ")");
+        }
+    }
+    
+    public void removeRelation(User user1, User user2) {
+        String edgeName = user1.getUsername() + "-" + user2.getUsername();
+        
+        try {
+            this.graph.removeEdge(edgeName);
+            this.executeKosarajuAlgorithm();
+        } catch(ElementNotFoundException e) {
+            System.err.println("Error eliminando eje: " + edgeName + " (" + e.toString() + ")");
         }
     }
 }

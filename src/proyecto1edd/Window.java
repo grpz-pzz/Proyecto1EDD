@@ -45,6 +45,7 @@ public class Window extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         editButton = new javax.swing.JButton();
         delButton = new javax.swing.JButton();
+        removeRelation = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -74,7 +75,7 @@ public class Window extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jList1);
 
-        jButton1.setText("Crear...");
+        jButton1.setText("Crear");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -97,6 +98,14 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
+        removeRelation.setText("Eliminar relación");
+        removeRelation.setEnabled(false);
+        removeRelation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeRelationActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -105,13 +114,15 @@ public class Window extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeRelation)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(delButton)))
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,7 +131,8 @@ public class Window extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(editButton)
-                    .addComponent(delButton))
+                    .addComponent(delButton)
+                    .addComponent(removeRelation))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addContainerGap())
@@ -135,7 +147,7 @@ public class Window extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(uploadtxt))
-                .addContainerGap(471, Short.MAX_VALUE))
+                .addContainerGap(425, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,6 +257,7 @@ public class Window extends javax.swing.JFrame {
             {
                 editButton.setEnabled(true);
                 delButton.setEnabled(true);
+                removeRelation.setEnabled(true);
             }
             
             isSelected = true;
@@ -290,23 +303,26 @@ public class Window extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Selecciona otro usuario y vuelve a presionar el botón para agregar una relación.");
         } else {
             if(selected == null) {
-                JOptionPane.showMessageDialog(this, "No seleccionaste un usuario al que agregar la relación.");
+                JOptionPane.showMessageDialog(this, "No seleccionaste un usuario al que agregar la relación. Selección cancelada.");
+                selectingUser = false;
+                selectedFirst = null;
                 return;
             }
             
             if(selectedFirst == selected) {
-                JOptionPane.showMessageDialog(this, "No puedes agregar una relación al mismo usuario.");
+                JOptionPane.showMessageDialog(this, "No puedes agregar una relación al mismo usuario. Selección cancelada.");
+                selectingUser = false;
+                selectedFirst = null;
                 return;
             }
             
             if(this.graph.relationExists(selectedFirst, selected))
             {
-                JOptionPane.showMessageDialog(this, "Ya existe una relación entre " + selectedFirst.getUsername() + " a " + selected.getUsername());
+                JOptionPane.showMessageDialog(this, "Ya existe una relación desde " + selectedFirst.getUsername() + " a " + selected.getUsername() + ". Selección cancelada.");
+                selectingUser = false;
+                selectedFirst = null;
                 return;
             }
-            
-            System.out.println("" + selectedFirst);
-            System.out.println("" + selected);
             
             selectingUser = false;
             selectedFirst.getRelations().insert(selected);
@@ -314,6 +330,42 @@ public class Window extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Relación creada: " + selectedFirst.getUsername() + " -> " + selected.getUsername());
         }
     }//GEN-LAST:event_editButtonActionPerformed
+
+    private void removeRelationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeRelationActionPerformed
+        if(!selectingUser) {
+            selectedFirst = selected;
+            selectingUser = true;
+            System.out.println("" + selectedFirst);
+            JOptionPane.showMessageDialog(this, "Selecciona otro usuario y vuelve a presionar el botón para eliminar su relación.");
+        } else {
+            if(selected == null) {
+                JOptionPane.showMessageDialog(this, "No seleccionaste un usuario al que eliminar la relación. Selección cancelada.");
+                selectingUser = false;
+                selectedFirst = null;
+                return;
+            }
+            
+            if(selectedFirst == selected) {
+                JOptionPane.showMessageDialog(this, "No puedes eliminar una relación al mismo usuario. Selección cancelada.");
+                selectingUser = false;
+                selectedFirst = null;
+                return;
+            }
+            
+            if(!this.graph.relationExists(selectedFirst, selected))
+            {
+                JOptionPane.showMessageDialog(this, "No existe una relación desde " + selectedFirst.getUsername() + " a " + selected.getUsername() + ". Selección cancelada.");
+                selectingUser = false;
+                selectedFirst = null;
+                return;
+            }
+            
+            selectingUser = false;
+            selectedFirst.getRelations().delete(selected);
+            this.graph.removeRelation(selectedFirst, selected);
+            JOptionPane.showMessageDialog(this, "Relación eliminada: " + selectedFirst.getUsername() + " -> " + selected.getUsername());
+        }
+    }//GEN-LAST:event_removeRelationActionPerformed
 
 
     public void addToList(String text)
@@ -330,6 +382,7 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton removeRelation;
     private javax.swing.JButton uploadtxt;
     // End of variables declaration//GEN-END:variables
 }
