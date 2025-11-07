@@ -3,13 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package proyecto1edd;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -25,11 +21,11 @@ public class Window extends javax.swing.JFrame {
     private GraphManager graph;
     private String loadedFilePath = "";
     private DefaultListModel<String> modelList = new DefaultListModel<>();
-    private boolean selectingUser = false;
     
     public Window() {
         initComponents();
         jList1.setModel(modelList);
+        jButton3.setEnabled(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -45,8 +41,7 @@ public class Window extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         editButton = new javax.swing.JButton();
         delButton = new javax.swing.JButton();
-        removeRelation = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -83,7 +78,7 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
-        editButton.setText("Relacionar con");
+        editButton.setText("Editar");
         editButton.setEnabled(false);
         editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -99,16 +94,6 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
-        removeRelation.setText("Eliminar relación");
-        removeRelation.setEnabled(false);
-        removeRelation.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeRelationActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Guardar");
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -122,11 +107,8 @@ public class Window extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeRelation)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(delButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                        .addComponent(delButton)
+                        .addGap(125, 125, 125)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -135,14 +117,19 @@ public class Window extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(editButton)
                     .addComponent(delButton)
-                    .addComponent(removeRelation)
-                    .addComponent(jButton2))
+                    .addComponent(editButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        jButton3.setText("Guardar archivo");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -152,14 +139,19 @@ public class Window extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(uploadtxt))
-                .addContainerGap(409, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(uploadtxt)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton3)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(uploadtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(uploadtxt, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -177,72 +169,14 @@ public class Window extends javax.swing.JFrame {
         if (returnValue == JFileChooser.APPROVE_OPTION)
         {
             File selectedFile = chooser.getSelectedFile();
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) 
-            { 
-                String line;
-                String type = "none"; //usuarios o relaciones
-                while ((line = reader.readLine()) != null) {
-                     // Si la linea no contiene '@' significa que lo proximo es ese tipo de dato
-                    if (!line.contains("@"))
-                    {
-                        System.out.println("Leyendo tipo de dato: " + line);
-
-                        type = line;
-                        continue; // hace que esta linea no haga nada mas y siga con la proxima
-                    }
-                    
-                    switch (type)
-                    {
-                        case "usuarios": {
-                            System.out.println(line);
-                           
-                            // Elimina el carcater '@'
-                            String temp = line.substring(1);
-                            
-                            // Crea instancia usuario
-                            User newUser = new User(temp);
-                            
-                            // Añade newUser a un hashmap auxiliar
-                            tempUsers.insert(temp, newUser);
-                            
-                            // Añade newUser a la lista de la interfaz
-                            addToList(temp);
-                            
-                            // Añade newUser a la lista principal de los usuarios
-                            Database.addUser(newUser);
-                            break;
-                        }
-                        
-                        case "relaciones": {
-                            
-                             // Coma seguida de uno o más espacios para separar usuarios
-                            String[] userNames = line.split(",\\s+");   
-                            
-                            // Elimina el caracter '@'
-                            String temp = userNames[0].substring(1);
-                            
-                            // Buscar usuario al que se le añadira las relaciones
-                            User mainUser = Database.searchUser(temp);
-                            
-                            // Buscar usuario para añadirlo como relacion
-                            User relationUser = Database.searchUser(userNames[1].substring(1));
-                            mainUser.relations.insert(relationUser); 
-                            
-                            System.out.println("Agregado " + relationUser.username + " a " + mainUser.username);
-                            
-                            break;
-                        }
-                    }
-                }
-                
-                this.uploadtxt.setEnabled(false);
-                this.graph = new GraphManager();
-                this.graph.start();
-                
-            } catch (IOException e) {
-                e.printStackTrace();
+            Database.Load(selectedFile);
+            Node<User> current = Database.getUsers().first();
+            while (current != null) {
+                User temp = current.getData();
+                modelList.addElement(temp.username);
+                current = current.getNext();
             }
+            jButton3.setEnabled(true);
         }
     }//GEN-LAST:event_uploadtxtActionPerformed
     
@@ -263,7 +197,6 @@ public class Window extends javax.swing.JFrame {
             {
                 editButton.setEnabled(true);
                 delButton.setEnabled(true);
-                removeRelation.setEnabled(true);
             }
             
             isSelected = true;
@@ -274,7 +207,6 @@ public class Window extends javax.swing.JFrame {
     private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed
         if(selectedFirst == selected) {
             selectedFirst = null;
-            selectingUser = false;
         }
         
         this.graph.removeUserNode(selected);
@@ -284,94 +216,20 @@ public class Window extends javax.swing.JFrame {
     }//GEN-LAST:event_delButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String username = JOptionPane.showInputDialog(this, "Introduzca el nombre del nuevo usuario a crear (sin @):", "Crear nuevo usuario", JOptionPane.INFORMATION_MESSAGE);
-        if(username.isBlank()) {
-            JOptionPane.showMessageDialog(this, "El nombre de usuario no puede estar en blanco.");
-            return;
-        }
-        
-        if(Database.searchUser(username) != null) {
-            JOptionPane.showMessageDialog(this, "Ya existe un usuario con ese nombre.");
-            return;
-        }
-        
-        User newUser = new User(username);
-        Database.addUser(newUser);
-        this.graph.addUserNode(newUser);
-        addToList(username);
+        CreateUser cu = new CreateUser(null);
+        cu.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        if(!selectingUser) {
-            selectedFirst = selected;
-            selectingUser = true;
-            System.out.println("" + selectedFirst);
-            JOptionPane.showMessageDialog(this, "Selecciona otro usuario y vuelve a presionar el botón para agregar una relación.");
-        } else {
-            if(selected == null) {
-                JOptionPane.showMessageDialog(this, "No seleccionaste un usuario al que agregar la relación. Selección cancelada.");
-                selectingUser = false;
-                selectedFirst = null;
-                return;
-            }
-            
-            if(selectedFirst == selected) {
-                JOptionPane.showMessageDialog(this, "No puedes agregar una relación al mismo usuario. Selección cancelada.");
-                selectingUser = false;
-                selectedFirst = null;
-                return;
-            }
-            
-            if(this.graph.relationExists(selectedFirst, selected))
-            {
-                JOptionPane.showMessageDialog(this, "Ya existe una relación desde " + selectedFirst.getUsername() + " a " + selected.getUsername() + ". Selección cancelada.");
-                selectingUser = false;
-                selectedFirst = null;
-                return;
-            }
-            
-            selectingUser = false;
-            selectedFirst.getRelations().insert(selected);
-            this.graph.addRelation(selectedFirst, selected);
-            JOptionPane.showMessageDialog(this, "Relación creada: " + selectedFirst.getUsername() + " -> " + selected.getUsername());
-        }
+
+        String value = jList1.getSelectedValue();
+        CreateUser cu = new CreateUser(value);
+        cu.setVisible(true);
     }//GEN-LAST:event_editButtonActionPerformed
 
-    private void removeRelationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeRelationActionPerformed
-        if(!selectingUser) {
-            selectedFirst = selected;
-            selectingUser = true;
-            System.out.println("" + selectedFirst);
-            JOptionPane.showMessageDialog(this, "Selecciona otro usuario y vuelve a presionar el botón para eliminar su relación.");
-        } else {
-            if(selected == null) {
-                JOptionPane.showMessageDialog(this, "No seleccionaste un usuario al que eliminar la relación. Selección cancelada.");
-                selectingUser = false;
-                selectedFirst = null;
-                return;
-            }
-            
-            if(selectedFirst == selected) {
-                JOptionPane.showMessageDialog(this, "No puedes eliminar una relación al mismo usuario. Selección cancelada.");
-                selectingUser = false;
-                selectedFirst = null;
-                return;
-            }
-            
-            if(!this.graph.relationExists(selectedFirst, selected))
-            {
-                JOptionPane.showMessageDialog(this, "No existe una relación desde " + selectedFirst.getUsername() + " a " + selected.getUsername() + ". Selección cancelada.");
-                selectingUser = false;
-                selectedFirst = null;
-                return;
-            }
-            
-            selectingUser = false;
-            selectedFirst.getRelations().delete(selected);
-            this.graph.removeRelation(selectedFirst, selected);
-            JOptionPane.showMessageDialog(this, "Relación eliminada: " + selectedFirst.getUsername() + " -> " + selected.getUsername());
-        }
-    }//GEN-LAST:event_removeRelationActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Database.Save();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
 
     public void addToList(String text)
@@ -383,13 +241,12 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JButton delButton;
     private javax.swing.JButton editButton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JList<String> jList1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JButton removeRelation;
     private javax.swing.JButton uploadtxt;
     // End of variables declaration//GEN-END:variables
 }
