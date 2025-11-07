@@ -8,7 +8,11 @@ package proyecto1edd;
  *
  * @author biancazullo
  * @param <T>
+ * creates nodes
+ * getters and setters
  */
+
+
 public class Node<T> {
     private T data;
     private Node<T> next;

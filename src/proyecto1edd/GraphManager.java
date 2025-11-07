@@ -15,10 +15,13 @@ import java.util.Random;
 public class GraphManager 
 {
     public static GraphManager graphManager;
-    private Graph graph;
-    private Random r = new Random();
+    private final Graph graph;
+    private final Random r = new Random();
     
-    // Obtener grafo de cualquier lugar
+   /**
+    * displays graph 
+    * enables auto layout to avoid elements overlapping
+    */
     public GraphManager()
     {
         System.setProperty("org.graphstream.ui", "swing");
@@ -29,6 +32,13 @@ public class GraphManager
         viewer.enableAutoLayout();
     }
     
+    /**
+     * set graphs attributes
+     * iterates over users list to set attributes
+     * iterates over relations to set attributes
+     * creates edges ids to facilitate searches
+     * executes algorithm
+     */
     public void start()
     {
         graph.setAttribute("ui.stylesheet", 
@@ -78,15 +88,24 @@ public class GraphManager
         executeKosarajuAlgorithm();
     }
     
+    /**
+     * clears graph 
+     * starts graph
+     */
     public void UpdateGraph()
     {
         graph.clear();
         start();
     }
     
-    private static final String[]  isolatedNodeColors ={ "#9ca399", "#a39999", "#9fabab", "#a4a5b0", "#aea7b5"
-        
-    };
+   
+    private static final String[]  isolatedNodeColors ={"#9ca399", "#a39999", "#9fabab", "#a4a5b0", "#aea7b5"};
+    
+    /**
+     * sets random fill colour from the isolated node colours list
+     * to avoid calling the execute algorithm procedure on isolated nodes
+     * @param user 
+     */
     public void addUserNode(User user) {       
         org.graphstream.graph.Node newNode = this.graph.addNode(user.getUsername());
         newNode.setAttribute("ui.label", user.getUsername());
@@ -95,10 +114,18 @@ public class GraphManager
         newNode.setAttribute("ui.style", style);             
     }
     
+    /**
+     * removes node from graph
+     * @param user 
+     */
     public void removeUserNode(User user) {
         this.graph.removeNode(user.getUsername());
     }
     
+    /**
+     * using the find SCC procedure 
+     * selects cyclically different colours from the array for all the SCCs
+     */
     public void executeKosarajuAlgorithm() {
         String[] colors = {
             "#e89797", "#dba4c4", "#b8a4db", "#8f99cc", "#7eb5cc", 
@@ -131,6 +158,10 @@ public class GraphManager
         }
     }
     
+    
+    /**
+     * removes colour attributes on each element
+     */
     public void resetNodeColors() {
         Node<User> userNode = Database.getUsers().first();
         while(userNode != null) {
@@ -142,11 +173,22 @@ public class GraphManager
         }
     }
     
+    /**
+     * searches for matching relations 
+     * @param user1
+     * @param user2
+     * @return 
+     */
     public boolean relationExists(User user1, User user2) {
         String edgeName = user1.getUsername() + "-" + user2.getUsername();
         return this.graph.getEdge(edgeName) != null;
     }
     
+    /**
+     * adds edges for new relations 
+     * @param user1
+     * @param user2 
+     */
     public void addRelation(User user1, User user2) {
         String edgeName = user1.getUsername() + "-" + user2.getUsername();
         
@@ -160,6 +202,11 @@ public class GraphManager
         }
     }
     
+    /**
+     * removes relation edge 
+     * @param user1
+     * @param user2 
+     */
     public void removeRelation(User user1, User user2) {
         String edgeName = user1.getUsername() + "-" + user2.getUsername();
         

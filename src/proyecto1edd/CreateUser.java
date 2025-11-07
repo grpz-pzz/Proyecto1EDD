@@ -13,21 +13,24 @@ import javax.swing.JOptionPane;
  */
 public class CreateUser extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CreateUser.class.getName());
 
     /**
-     * Creates new form CreateUser
+     * Creates new window CreateUser
      */
     
     private DefaultListModel<String> modelList = new DefaultListModel<>();
     private DefaultListModel<String> modelList1 = new DefaultListModel<>();
     private User userM = null;
     
+    /**
+     * creates user
+     * @param user 
+     */
     public CreateUser(String user)
     {
         initComponents();
-        jList1.setModel(modelList);
-        jList2.setModel(modelList1);
+        availableUserList.setModel(modelList);
+        existingRelationsList.setModel(modelList1);
         
         if(user == null)
         {
@@ -40,8 +43,8 @@ public class CreateUser extends javax.swing.JFrame {
         }
         else
         {
-            jTextField1.setText(user);
-            jTextField1.setEnabled(false);
+            newUserName.setText(user);
+            newUserName.setEnabled(false);
             userM = Database.searchUser(user);
             Node<User> current = Database.getUsers().pFirst;
             while (current != null) {
@@ -54,7 +57,7 @@ public class CreateUser extends javax.swing.JFrame {
                 else
                     
                 {
-                    if(temp.username != userM.username)
+                    if(temp.username.equals(userM.username) == false)
                     {
                         modelList.addElement(temp.username);
                     }
@@ -65,9 +68,12 @@ public class CreateUser extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * adds selected user to relation list
+     */
     private void AddToRelationList()
     {
-        int selectIndex = jList1.getSelectedIndex();
+        int selectIndex = availableUserList.getSelectedIndex();
         
         if(selectIndex >= 0)
         {    
@@ -76,9 +82,12 @@ public class CreateUser extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * removes selected user from relations list
+     */
     private void RemoveInRelationList()
     {
-        int selectIndex = jList2.getSelectedIndex();
+        int selectIndex = existingRelationsList.getSelectedIndex();
         
         if(selectIndex >= 0)
         {  
@@ -87,11 +96,14 @@ public class CreateUser extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * updates graph
+     */
     private void Accept()
     {
         if(userM == null)
         {
-            userM = new User(jTextField1.getText());
+            userM = new User(newUserName.getText());
             Database.addUser(userM);
         }
         else
@@ -118,30 +130,30 @@ public class CreateUser extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
+        newUserName = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        availableUserList = new javax.swing.JList<>();
         jPanel3 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        addRelationButton = new javax.swing.JButton();
+        deleteRelationButton = new javax.swing.JButton();
+        acceptButton = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        existingRelationsList = new javax.swing.JList<>();
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre de usuario"));
+        newUserName.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre de usuario"));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Usuarios disponibles"));
 
-        jList1.setBorder(null);
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        availableUserList.setBorder(null);
+        availableUserList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(jList1);
+        availableUserList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(availableUserList);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -160,24 +172,24 @@ public class CreateUser extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jButton2.setText("Agregar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        addRelationButton.setText("Agregar");
+        addRelationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                addRelationButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Eliminar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        deleteRelationButton.setText("Eliminar");
+        deleteRelationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                deleteRelationButtonActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Aceptar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        acceptButton.setText("Aceptar");
+        acceptButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                acceptButtonActionPerformed(evt);
             }
         });
 
@@ -187,10 +199,10 @@ public class CreateUser extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addRelationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deleteRelationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(acceptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -198,23 +210,23 @@ public class CreateUser extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jButton2)
+                .addComponent(addRelationButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(deleteRelationButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(acceptButton)
                 .addContainerGap(85, Short.MAX_VALUE))
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Relaciones"));
 
-        jList2.setBorder(null);
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
+        existingRelationsList.setBorder(null);
+        existingRelationsList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane2.setViewportView(existingRelationsList);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -241,7 +253,7 @@ public class CreateUser extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(15, 15, 15)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(newUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -255,7 +267,7 @@ public class CreateUser extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(newUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -271,60 +283,37 @@ public class CreateUser extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void addRelationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRelationButtonActionPerformed
         AddToRelationList();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_addRelationButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void deleteRelationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRelationButtonActionPerformed
         RemoveInRelationList();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_deleteRelationButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(jTextField1.getText().length() < 3)
+    private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
+        if(newUserName.getText().length() < 3)
         {
-            JOptionPane.showMessageDialog(null, "El nombre de usuario debe tener mas de 4 caracteres", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "El nombre de usuario debe tener mas de 2 caracteres", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
         Accept();
         this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_acceptButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new CreateUser(null).setVisible(true));
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
+    private javax.swing.JButton acceptButton;
+    private javax.swing.JButton addRelationButton;
+    private javax.swing.JList<String> availableUserList;
+    private javax.swing.JButton deleteRelationButton;
+    private javax.swing.JList<String> existingRelationsList;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField newUserName;
     // End of variables declaration//GEN-END:variables
 }

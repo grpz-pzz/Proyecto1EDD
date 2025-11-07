@@ -9,15 +9,19 @@ package proyecto1edd;
  * @author biancazullo
  */
 public class KosarajuAlgorithm {
+    /**
+     * first depth search implementation over original graph
+     * fills the stack with nodes in finalization time order
+     * 
+     * @param user
+     * @param stack 
+     */
     private static void firstDFS(User user, Stack<User> stack) {
         if(user.beenVisited())
             return;
-        
         user.setVisited(true);
-
         List<User> neighbors = user.getRelations();
         Node<User> neighborNode = neighbors.first();
-
         while (neighborNode != null) {
             User neighbor = neighborNode.getData();
             if (!neighbor.beenVisited()) {
@@ -25,10 +29,15 @@ public class KosarajuAlgorithm {
             }
             neighborNode = neighborNode.getNext();
         }
-
         stack.push(user);
     }
-
+    /**
+     * creates a simulation of a transposed graph (inverts edges)
+     * and implements a depth first search on the simulated transposed graph
+     * @param user
+     * @param currentSCC
+     * @param allUsers 
+     */
     private static void secondDFS(User user, List<User> currentSCC, List<User> allUsers) {
         if(user.beenVisited())
             return;
@@ -49,7 +58,11 @@ public class KosarajuAlgorithm {
             allUsersNode = allUsersNode.getNext();
         }
     }
-
+    
+    /**
+     * principal method that executes the algorithm 
+     * @return adjacency list, every internal list is a SCC
+     */
     public static List<List<User>> findSCCs() {
         List<User> allUsers = Database.getUsers();
 
