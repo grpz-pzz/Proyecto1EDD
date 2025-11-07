@@ -12,8 +12,7 @@ import java.util.Random;
  *
  * @author gianc
  */
-public class GraphManager 
-{
+public class GraphManager {
     public static GraphManager graphManager;
     private final Graph graph;
     private final Random r = new Random();
@@ -98,6 +97,10 @@ public class GraphManager
         start();
     }
     
+    public void clear()
+    {
+        graph.clear();
+    }
    
     private static final String[]  isolatedNodeColors ={"#9ca399", "#a39999", "#9fabab", "#a4a5b0", "#aea7b5"};
     

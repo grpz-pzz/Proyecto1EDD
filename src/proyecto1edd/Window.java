@@ -6,6 +6,7 @@ package proyecto1edd;
 import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -18,8 +19,8 @@ public class Window extends javax.swing.JFrame {
 
     private User selected;
     private User selectedFirst;
-    private GraphManager graph;
     private final DefaultListModel<String> modelList = new DefaultListModel<>();
+    private boolean loadedFile = false;
     
     public Window() {
         initComponents();
@@ -189,6 +190,12 @@ public class Window extends javax.swing.JFrame {
      * 
      */
     private void uploadtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadtxtActionPerformed
+        if(loadedFile) {
+            int ret = JOptionPane.showConfirmDialog(this, "Estás a punto de cargar otro archivo. Antes de hacerlo, deberías guardar los cambios que hayas hecho en el archivo actual.", "Cargar archivo", JOptionPane.OK_CANCEL_OPTION);
+            if(ret == JOptionPane.CANCEL_OPTION)
+                return;
+        }
+        
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo txt", "txt");
         chooser.setFileFilter(filter);
@@ -196,6 +203,11 @@ public class Window extends javax.swing.JFrame {
         int returnValue = chooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION)
         {
+            if(loadedFile) {
+                GraphManager.graphManager.clear();
+                Database.clearUsers();
+            }
+            
             File selectedFile = chooser.getSelectedFile();
             Database.Load(selectedFile);
             Node<User> current = Database.getUsers().first();
@@ -205,6 +217,7 @@ public class Window extends javax.swing.JFrame {
                 current = current.getNext();
             }
             savetxt.setEnabled(true);
+            loadedFile = true;
         }
     }//GEN-LAST:event_uploadtxtActionPerformed
     
@@ -241,10 +254,10 @@ public class Window extends javax.swing.JFrame {
         if(selectedFirst == selected) {
             selectedFirst = null;
         }
-        this.graph.removeUserNode(selected);
+        GraphManager.graphManager.removeUserNode(selected);
         modelList.removeElement(selected.getUsername());
         Database.deleteUser(selected);
-        this.graph.executeKosarajuAlgorithm();
+        GraphManager.graphManager.executeKosarajuAlgorithm();
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     

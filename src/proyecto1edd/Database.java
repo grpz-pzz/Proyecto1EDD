@@ -177,4 +177,8 @@ public class Database
         }
         
     }
+    
+    public static void clearUsers() {
+        Database.users = new List();
+    }
 }
