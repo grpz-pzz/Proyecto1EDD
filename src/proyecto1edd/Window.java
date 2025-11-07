@@ -12,20 +12,20 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author biancazullo
  */
+
+
 public class Window extends javax.swing.JFrame {
 
-    // Map de Users por claves Usernames, solamente auxiliar para la interfaz y ahorrar recursos
-    private Map<String, User> tempUsers = new Map<>();
     private User selected;
     private User selectedFirst;
     private GraphManager graph;
-    private String loadedFilePath = "";
-    private DefaultListModel<String> modelList = new DefaultListModel<>();
+    private final DefaultListModel<String> modelList = new DefaultListModel<>();
     
     public Window() {
         initComponents();
-        jList1.setModel(modelList);
-        jButton3.setEnabled(false);
+        allUsersDynamicList.setModel(modelList);
+        savetxt.setEnabled(false);
+        userGuide.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -37,11 +37,14 @@ public class Window extends javax.swing.JFrame {
         uploadtxt = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
+        allUsersDynamicList = new javax.swing.JList<>();
+        createUserButton = new javax.swing.JButton();
         editButton = new javax.swing.JButton();
-        delButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        helpButton = new javax.swing.JButton();
+        savetxt = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        userGuide = new javax.swing.JTextArea();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -58,23 +61,23 @@ public class Window extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Administrar usuarios"));
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        allUsersDynamicList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+        allUsersDynamicList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        allUsersDynamicList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jList1MouseReleased(evt);
+                allUsersDynamicListMouseReleased(evt);
             }
         });
-        jScrollPane2.setViewportView(jList1);
+        jScrollPane2.setViewportView(allUsersDynamicList);
 
-        jButton1.setText("Crear");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        createUserButton.setText("Crear");
+        createUserButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                createUserButtonActionPerformed(evt);
             }
         });
 
@@ -86,11 +89,18 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
-        delButton.setText("Eliminar");
-        delButton.setEnabled(false);
-        delButton.addActionListener(new java.awt.event.ActionListener() {
+        deleteButton.setText("Eliminar");
+        deleteButton.setEnabled(false);
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delButtonActionPerformed(evt);
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
+        helpButton.setText("Ayuda");
+        helpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpButtonActionPerformed(evt);
             }
         });
 
@@ -100,36 +110,45 @@ public class Window extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(createUserButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(delButton)
-                        .addGap(125, 125, 125)))
+                        .addComponent(deleteButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(helpButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(delButton)
-                    .addComponent(editButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(editButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(createUserButton)
+                        .addComponent(deleteButton)
+                        .addComponent(helpButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jButton3.setText("Guardar archivo");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        savetxt.setText("Guardar archivo");
+        savetxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                savetxtActionPerformed(evt);
             }
         });
+
+        userGuide.setEditable(false);
+        userGuide.setColumns(20);
+        userGuide.setRows(5);
+        userGuide.setText("Bienvenid@ a nuestra guía de usuario para el manejo de\npágina representación gráfica de relaciones de usuario \npara cualquier red social!\nA continuación, les porporcionamos como operar nuestro \nprograma --->\n\n- Para cargar archivo: presione el botón \"Cargar archivo\" \ny seleccione un archivo txt. Y listo! Su grafo será mostrado\n en otra ventana.\n\n- Para crear un nuevo usuario: presione en botón \"Crear\", \ningrese el nombre del nuevo usuario y presione el botón \n\"Aceptar\".\n\n- Para eliminar un usuario: seleccione el usuario a eliminar\ny presione el botón \"Eliminar\". Su grafo se actualizará \nautomaticamente.\n\n- Para agregar una relación: seleccione el \nusuario al que desea relacionar con otro, \npresione el botón de \"Editar\". Se abrirá una \nnueva ventana, seleccione un usuario de la \nlista \"Usuarios Disponibles\" y presione el \nbotón \"Agregar\". Ahora su primer usuario \nseleccionado \"sigue\" al otro usuario. \nRepita este paso para agregar mas \nrelaciones, y luego presione el botón \"Aceptar\". \nEl grafo mostrado se actualizará automaticamente.\n\n- Para eliminar una relación: seleccione el usuario al \nque desea eliminarle relaciones y presione el botón \n\"Editar\". Se abrirá una nueva ventana, seleccione un \nusuario de la lista \"Relaciones\" y presione el botón \n\"Eliminar\". Repita este paso para eliminar mas \nrelaciones, y luego presione el botón \"Aceptar\". El grafo\nmostrado se actualizará automaticamente.\n\n- Para actualizar el archivo txt: luego de efectuar los \ncambios deseados, presione el botón \"Guardar Archivo\"\n y su archivo txt se actializará y guardará \nautomaticamente. \n\n- Para ocultar la guía de usuario: presione nuevamente \nel botón \"Ayuda\".\n\nGracias por preferirnos! Que tenga un buen día! <3\n");
+        jScrollPane1.setViewportView(userGuide);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -138,28 +157,37 @@ public class Window extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(uploadtxt)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(savetxt))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(uploadtxt, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(uploadtxt, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                            .addComponent(savetxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * 
+     * @param evt 
+     * 
+     */
     private void uploadtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadtxtActionPerformed
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo txt", "txt");
@@ -176,77 +204,109 @@ public class Window extends javax.swing.JFrame {
                 modelList.addElement(temp.username);
                 current = current.getNext();
             }
-            jButton3.setEnabled(true);
+            savetxt.setEnabled(true);
         }
     }//GEN-LAST:event_uploadtxtActionPerformed
     
+    /**
+     * activates buttons when an item is selected
+     * to avoid calling setEnabled needlessly 
+     * doesn't affect the functioning of the program
+     */
+    
     boolean isSelected = false;
-    private void jList1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseReleased
-        int index = jList1.locationToIndex(evt.getPoint());
+    private void allUsersDynamicListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_allUsersDynamicListMouseReleased
+        int index = allUsersDynamicList.locationToIndex(evt.getPoint());
         if (index >= 0)
         {
-            String tempSelected = jList1.getModel().getElementAt(index);
-            
-            // Obtiene el User del hashmap
+            String tempSelected = allUsersDynamicList.getModel().getElementAt(index);
             selected = Database.searchUser(tempSelected);
-
-            // Se activan los botones cuando se selecciona un item
-            // Es asi para que no se llame setEnabled ineccesariamente y
-            // no afecta el funcionamiento del programa
             if(!isSelected)
             {
                 editButton.setEnabled(true);
-                delButton.setEnabled(true);
-            }
-            
+                deleteButton.setEnabled(true);
+            }          
             isSelected = true;
             System.out.println("Usuario seleccionado: " + selected.getUsername());
         }
-    }//GEN-LAST:event_jList1MouseReleased
+    }//GEN-LAST:event_allUsersDynamicListMouseReleased
 
-    private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed
+    
+    /**
+     * deletes node and relations associated with said node 
+     * executes algorithm again to automatically update graph
+     * @param evt 
+     */
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         if(selectedFirst == selected) {
             selectedFirst = null;
         }
-        
         this.graph.removeUserNode(selected);
         modelList.removeElement(selected.getUsername());
         Database.deleteUser(selected);
         this.graph.executeKosarajuAlgorithm();
-    }//GEN-LAST:event_delButtonActionPerformed
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    
+    /**
+     * opens the CreateUser window
+     * @param evt 
+     */
+    private void createUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createUserButtonActionPerformed
         CreateUser cu = new CreateUser(null);
         cu.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_createUserButtonActionPerformed
 
+    /**
+     * gets selected value from all users list 
+     * opens CreateUser window
+     * @param evt 
+     */
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
 
-        String value = jList1.getSelectedValue();
+        String value = allUsersDynamicList.getSelectedValue();
         CreateUser cu = new CreateUser(value);
         cu.setVisible(true);
     }//GEN-LAST:event_editButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    /**
+     * saves changes in txt file
+     * @param evt 
+     */
+    private void savetxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savetxtActionPerformed
         Database.Save();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_savetxtActionPerformed
 
+    /**
+     * shows user guide
+     * @param evt 
+     */
+    private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
+        userGuide.setVisible(!userGuide.isVisible());
+    }//GEN-LAST:event_helpButtonActionPerformed
 
+    /**
+     * adds element to model list
+     * @param text 
+     */
     public void addToList(String text)
     {
        modelList.addElement(text);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton delButton;
+    private javax.swing.JList<String> allUsersDynamicList;
+    private javax.swing.JButton createUserButton;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JButton helpButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton savetxt;
     private javax.swing.JButton uploadtxt;
+    private javax.swing.JTextArea userGuide;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,7 +5,7 @@
 package proyecto1edd;
 
 /**
- *
+ * generic data structure code for a list 
  * @author biancazullo
  * @param <T>
  */
@@ -18,6 +18,10 @@ public class List<T> {
         this.pLast = null;
         this.length = 0;
     }
+    /** 
+     * inserts data into the list
+     * @param data 
+     */
     public void insert(T data){
         Node newNode = new Node(data);
         if (this.pFirst == null){
@@ -29,15 +33,35 @@ public class List<T> {
         }
         this.length++;
     }
+    
+    /**
+     * primitive to return first node
+     * @return first 
+     */
     public Node<T> first(){
         return this.pFirst;
     }
+    
+    /**
+     * primitive to return last node of the list
+     * @return last 
+     */
     public Node<T> last(){
         return this.pLast;
     }
+    
+    /**
+     * primitive of length of the list
+     * @return length 
+     */
     public int length(){
         return this.length;
     }
+    
+    /**
+     * finds and deletes element of the list 
+     * @param m 
+     */
     public void delete(T m){
         Node<T> current = pFirst;
         Node<T> previous = null;
@@ -60,6 +84,10 @@ public class List<T> {
             current = current.getNext();
         }
     }
+    
+    /**
+     * prints list to console 
+     */
     public void printList(){
         Node<T> current = pFirst;
         while (current != null){
@@ -67,6 +95,12 @@ public class List<T> {
             current = current.getNext();
         }
     }
+    
+    /**
+     * inserts an element at the first position of the list
+     * for the stack structure
+     * @param data 
+     */
     public void insertFirst(T data){
         Node newNode = new Node(data);
         if (this.pFirst == null){
@@ -78,6 +112,12 @@ public class List<T> {
         }
         this.length++;
     }
+    
+    /**
+     * deletes first element of the list
+     * for the stack structure
+     * @return 
+     */
     public T deleteFirst(){
         if (this.pFirst == null){
             return null;
@@ -91,6 +131,12 @@ public class List<T> {
         }
         return data;
     }
+    
+    /**
+     * to find an element of the list
+     * @param m
+     * @return 
+     */
     public boolean contains(T m){
         Node<T> current = pFirst;
         while (current != null){
@@ -101,50 +147,11 @@ public class List<T> {
         }
         return false;
     } 
-    public T get(int index) {
-        if(index >= this.length)
-            return null;
-        
-        Node<T> temp = this.pFirst;
-        for(int i = 0; i < index; ++i) {
-            temp = temp.getNext();
-        }
-        
-        return temp.getData();
-    }
     
-    public void set(int index, T value) {
-        if(index >= this.length)
-            return;
-        
-        Node<T> n = this.pFirst;
-        
-        for(int i = 0; i <= index; i++)
-        {
-            n = n.getNext();
-        }
-        
-        n.setData(value);
-    }
-    
-    public int getIdxOf(T value) {
-        if(this.pFirst == null)
-            return -1;
-        
-        Node<T> temp = this.pFirst;
-        int i = 0;
-        
-        while(temp != null) {
-            if(temp.getData().equals(value))
-                return i;
-            
-            temp = temp.getNext();
-            i++;
-        }
-        
-        return -1;
-    }
-    
+    /**
+     * converts data to string
+     * @return data as a string
+     */
     public String asString() {
         String s = "[";
         Node<T> n = this.pFirst;

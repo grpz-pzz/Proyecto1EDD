@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -24,7 +23,7 @@ public class Database
     /**
     * adds a user to the database
     * <p>
-    * this method iterates the user list and verifies if the username is s\already registered 
+    * this method iterates the user list and verifies if the username is already registered 
     * if it is not found create a new object {@code User} and inserts it in the list.
     * if the user exists show a message.
     *
@@ -47,17 +46,28 @@ public class Database
         return true;
     }
 
-
+    /**
+     * users getter
+     * @return users list
+     */
     public static List<User> getUsers() {
         return users;
     }
     
-    public static void deleteUser(User user)
-    {
+    /**
+     * deletes user
+     * @param user 
+     */
+    public static void deleteUser(User user){
         System.out.print("Eliminado " + user.getUsername());
         getUsers().delete(user);
     }
 
+    /**
+     * iterates users list to find target user
+     * @param targetUser
+     * @return null
+     */
     public static User searchUser(String targetUser) {
         Node<User> current = Database.getUsers().first();
         while (current != null) {
@@ -70,6 +80,9 @@ public class Database
         return null;
     }
     
+    /**
+     * updates text file
+     */
     public static void Save()
     {
         String[] lineas = {
@@ -77,12 +90,9 @@ public class Database
             "Segunda línea",
             "Tercera línea"
         };
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) 
-        {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file)))  {
             writer.write("usuarios");
             writer.newLine();
-            
             Node<User> current = getUsers().first();
             while (current != null) {
                 User temp = current.getData();
@@ -90,104 +100,75 @@ public class Database
                 writer.newLine();
                 current = current.getNext();
             }
-            
             writer.write("relaciones");
             writer.newLine();
-            
             Node<User> current1 = getUsers().first();
             while (current1 != null) 
             {
                 User temp = current1.getData();
-                
                 Node<User> current2 = temp.relations.pFirst;
                 while (current2 != null) 
                 {
                     User r = current2.getData();
-                    
                     writer.write("@" + temp.username + ", " + "@" + r.username);
-                    writer.newLine();
-                            
+                    writer.newLine();  
                     current2 = current2.getNext();
                 }
-                
                 current1 = current1.getNext();
             }
-            
             System.out.println("Archivo escrito correctamente.");
         } catch (IOException e) {
             System.out.println("Error al escribir el archivo: " + e.getMessage());
         }
     }
     
+    /**
+     * loads text file 
+     * @param f 
+     */
     public static void Load(File f)
     {
         file = f;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) 
             { 
                 String line;
-                String type = "none"; //usuarios o relaciones
+                String type = "none"; 
                 while ((line = reader.readLine()) != null) {
-                     // Si la linea no contiene '@' significa que lo proximo es ese tipo de dato
-                    if (!line.contains("@"))
-                    {
+                    if (!line.contains("@")){
                         System.out.println("Leyendo tipo de dato: " + line);
-
                         type = line;
-                        continue; // hace que esta linea no haga nada mas y siga con la proxima
+                        continue; 
                     }
-                    
                     switch (type)
                     {
                         case "usuarios": {
-                            System.out.println(line);
-                           
-                            // Elimina el carcater '@'
+                            System.out.println(line);                         
                             String temp = line.substring(1);
-                            
-                            // Crea instancia usuario
                             User newUser = new User(temp);
-                            
-                            // Añade newUser a un hashmap auxiliar
-                            //tempUsers.insert(temp, newUser);
-                            
-                            // Añade newUser a la lista de la interfaz
-                            //addToList(temp);
-                            
-                            // Añade newUser a la lista principal de los usuarios
                             addUser(newUser);
                             break;
                         }
-                        
                         case "relaciones": {
-                            
-                             // Coma seguida de uno o más espacios para separar usuarios
                             String[] userNames = line.split(",\\s+");   
-                            
-                            // Elimina el caracter '@'
                             String temp = userNames[0].substring(1);
-                            
-                            // Buscar usuario al que se le añadira las relaciones
                             User mainUser = searchUser(temp);
-                            
-                            // Buscar usuario para añadirlo como relacion
                             User relationUser = searchUser(userNames[1].substring(1));
                             mainUser.relations.insert(relationUser); 
-                            
                             System.out.println("Agregado " + relationUser.username + " a " + mainUser.username);
-                            
                             break;
                         }
                     }
                 }
-            //this.uploadtxt.setEnabled(false);
             GraphManager graph = new GraphManager();
             graph.start();
-  
         } catch (IOException ex) {
             System.getLogger(Database.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
     
+    /**
+     * resets visited elements
+     */
     public static void resetVisited() {
         Node<User> n = Database.getUsers().first();
         while(n != null) {
