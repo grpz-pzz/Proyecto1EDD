@@ -14,8 +14,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Window extends javax.swing.JFrame {
 
-    // Map de Users por claves Usernames, solamente auxiliar para la interfaz y ahorrar recursos
-    private Map<String, User> tempUsers = new Map<>();
     private User selected;
     private User selectedFirst;
     private GraphManager graph;
