@@ -92,8 +92,11 @@ public class CreateUser extends javax.swing.JFrame {
         if(userM == null)
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             userM = new User(jTextField1.getText());
 =======
+=======
+>>>>>>> Stashed changes
             if(Database.searchUser(newUserName.getText()) != null)
             {
                 JOptionPane.showMessageDialog(null, "Este usuario ya existe", "Aviso", JOptionPane.WARNING_MESSAGE);

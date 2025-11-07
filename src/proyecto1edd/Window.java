@@ -15,6 +15,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Window extends javax.swing.JFrame {
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Map de Users por claves Usernames, solamente auxiliar para la interfaz y ahorrar recursos
     private Map<String, User> tempUsers = new Map<>();
     private User selected;
@@ -23,6 +24,8 @@ public class Window extends javax.swing.JFrame {
     private String loadedFilePath = "";
     private DefaultListModel<String> modelList = new DefaultListModel<>();
 =======
+=======
+>>>>>>> Stashed changes
     private final DefaultListModel<String> modelList = new DefaultListModel<>();
 >>>>>>> Stashed changes
     
@@ -190,6 +193,7 @@ public class Window extends javax.swing.JFrame {
         if (index >= 0)
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             String tempSelected = jList1.getModel().getElementAt(index);
             
             // Obtiene el User del hashmap
@@ -207,11 +211,16 @@ public class Window extends javax.swing.JFrame {
             isSelected = true;
             System.out.println("Usuario seleccionado: " + selected.getUsername());
 =======
+=======
+>>>>>>> Stashed changes
             if(!isSelected)
             {
                 editButton.setEnabled(true);
                 deleteButton.setEnabled(true);
             }          
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
     }//GEN-LAST:event_jList1MouseReleased
@@ -262,15 +271,21 @@ public class Window extends javax.swing.JFrame {
 
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void addToList(String text)
     {
        modelList.addElement(text);
     }
 =======
+=======
+>>>>>>> Stashed changes
     /**
      * adds element to model list
      * @param text 
      */
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
