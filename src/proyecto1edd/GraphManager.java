@@ -6,7 +6,8 @@ package proyecto1edd;
 
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
-import org.graphstream.ui.view.Viewer;
+import org.graphstream.ui.layout.Layout;
+import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import java.util.Random;
 /**
  *
@@ -26,9 +27,12 @@ public class GraphManager {
         System.setProperty("org.graphstream.ui", "swing");
         graphManager = this;
         graph = new SingleGraph("grafo");
-
-        Viewer viewer = graph.display();
-        viewer.enableAutoLayout();
+        Layout layout = new SpringBox(false);
+        layout.addAttributeSink(graph);
+        layout.setQuality(1.0);
+        layout.setForce(1.2);
+        graph.addSink(layout);
+        graph.display();  
     }
     
     /**
@@ -40,10 +44,13 @@ public class GraphManager {
      */
     public void start()
     {
+       
         graph.setAttribute("ui.stylesheet", 
                 "node { " +
                         "text-size: 20; " +
-                        "size: 60px; " +
+                        "size: 60px; " + "}" + "sprite.cluster {" + 
+                        "z-index: 0;" + 
+                        
                 "}"
         );
         
@@ -113,7 +120,8 @@ public class GraphManager {
         org.graphstream.graph.Node newNode = this.graph.addNode(user.getUsername());
         newNode.setAttribute("ui.label", user.getUsername());
         String randomColor = isolatedNodeColors[r.nextInt(isolatedNodeColors.length)];
-        String style = String.format("fill-color: %s;", isolatedNodeColors);
+        String style;
+        style = String.format("fill-color: %s;", randomColor);
         newNode.setAttribute("ui.style", style);             
     }
     
@@ -198,8 +206,7 @@ public class GraphManager {
         try {
             this.graph.addEdge(edgeName, user1.getUsername(), user2.getUsername(), true);
             this.executeKosarajuAlgorithm();
-            Viewer viewer = graph.display();
-            viewer.enableAutoLayout();
+            graph.display();
         } catch(Exception e) {
             System.err.println("Error creando eje: " + edgeName + " (" + e.toString() + ")");
         }
@@ -216,8 +223,7 @@ public class GraphManager {
         try {
             this.graph.removeEdge(edgeName);
             this.executeKosarajuAlgorithm();
-            Viewer viewer = graph.display();
-            viewer.enableAutoLayout();
+            graph.display();
         } catch(ElementNotFoundException e) {
             System.err.println("Error eliminando eje: " + edgeName + " (" + e.toString() + ")");
         }
