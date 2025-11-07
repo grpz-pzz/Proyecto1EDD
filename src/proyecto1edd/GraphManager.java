@@ -14,21 +14,30 @@ import java.util.Random;
  */
 public class GraphManager 
 {
+    public static GraphManager graphManager;
     private Graph graph;
     private Random r = new Random();
-    public void start() {
+    
+    // Obtener grafo de cualquier lugar
+    public GraphManager()
+    {
         System.setProperty("org.graphstream.ui", "swing");
+        graphManager = this;
+        graph = new SingleGraph("grafo");
 
-        this.graph = new SingleGraph("grafo");
+        Viewer viewer = graph.display();
+        viewer.enableAutoLayout();
+    }
+    
+    public void start()
+    {
         graph.setAttribute("ui.stylesheet", 
                 "node { " +
-                        "text-size: 25; " +
-                        "size: 75px; " +
+                        "text-size: 20; " +
+                        "size: 60px; " +
                 "}"
         );
         
-        
-        // Paso 1: Agregar nodos
         Node<User> current = Database.getUsers().first();
         while (current != null) {
             User user = current.getData();
@@ -38,7 +47,6 @@ public class GraphManager
             current = current.getNext();
         }
 
-
         Node<User> current1 = Database.getUsers().first();
         while (current1 != null) {
             User user = current1.getData();
@@ -47,16 +55,13 @@ public class GraphManager
             while (relation != null) {
                 User relationUser = relation.getData();
 
-                // Asegurar que el nodo destino existe
                 if (graph.getNode(relationUser.username) == null) {
                     graph.addNode(relationUser.username).setAttribute("ui.label", relationUser.username);
                 }
 
-                // Crear ID único para la arista
                 String idAxis = user.username + "-" + relationUser.username;
                 org.graphstream.graph.Edge edge = graph.getEdge(idAxis);
                 
-                // Evitar duplicados
                 if (edge == null) {
                     try {
                         graph.addEdge(idAxis, user.username, relationUser.username, true); // true = dirigida
@@ -65,17 +70,20 @@ public class GraphManager
                         System.err.println(e.toString());
                     }
                 }
-
                 relation = relation.getNext();
             }
-
             current1 = current1.getNext();
         }
         
-        this.executeKosarajuAlgorithm();
-        Viewer viewer = graph.display();
-        viewer.enableAutoLayout();
+        executeKosarajuAlgorithm();
     }
+    
+    public void UpdateGraph()
+    {
+        graph.clear();
+        start();
+    }
+    
     private static final String[]  isolatedNodeColors ={ "#9ca399", "#a39999", "#9fabab", "#a4a5b0", "#aea7b5"
         
     };
