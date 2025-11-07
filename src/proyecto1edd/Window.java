@@ -14,6 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Window extends javax.swing.JFrame {
 
+<<<<<<< Updated upstream
     // Map de Users por claves Usernames, solamente auxiliar para la interfaz y ahorrar recursos
     private Map<String, User> tempUsers = new Map<>();
     private User selected;
@@ -21,6 +22,9 @@ public class Window extends javax.swing.JFrame {
     private GraphManager graph;
     private String loadedFilePath = "";
     private DefaultListModel<String> modelList = new DefaultListModel<>();
+=======
+    private final DefaultListModel<String> modelList = new DefaultListModel<>();
+>>>>>>> Stashed changes
     
     public Window() {
         initComponents();
@@ -185,6 +189,7 @@ public class Window extends javax.swing.JFrame {
         int index = jList1.locationToIndex(evt.getPoint());
         if (index >= 0)
         {
+<<<<<<< Updated upstream
             String tempSelected = jList1.getModel().getElementAt(index);
             
             // Obtiene el User del hashmap
@@ -201,9 +206,17 @@ public class Window extends javax.swing.JFrame {
             
             isSelected = true;
             System.out.println("Usuario seleccionado: " + selected.getUsername());
+=======
+            if(!isSelected)
+            {
+                editButton.setEnabled(true);
+                deleteButton.setEnabled(true);
+            }          
+>>>>>>> Stashed changes
         }
     }//GEN-LAST:event_jList1MouseReleased
 
+<<<<<<< Updated upstream
     private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed
         if(selectedFirst == selected) {
             selectedFirst = null;
@@ -214,6 +227,22 @@ public class Window extends javax.swing.JFrame {
         Database.deleteUser(selected);
         this.graph.executeKosarajuAlgorithm();
     }//GEN-LAST:event_delButtonActionPerformed
+=======
+    
+    /**
+     * deletes node and relations associated with said node 
+     * executes algorithm again to automatically update graph
+     * @param evt 
+     */
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        editButton.setEnabled(false);
+        deleteButton.setEnabled(false);
+        User delUser = Database.searchUser(allUsersDynamicList.getSelectedValue());
+        modelList.removeElement(allUsersDynamicList.getSelectedValue());
+        Database.deleteUser(delUser);
+        GraphManager.graphManager.UpdateGraph();
+    }//GEN-LAST:event_deleteButtonActionPerformed
+>>>>>>> Stashed changes
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         CreateUser cu = new CreateUser(null);
@@ -232,10 +261,17 @@ public class Window extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
 
+<<<<<<< Updated upstream
     public void addToList(String text)
     {
        modelList.addElement(text);
     }
+=======
+    /**
+     * adds element to model list
+     * @param text 
+     */
+>>>>>>> Stashed changes
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton delButton;
