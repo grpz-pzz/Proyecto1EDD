@@ -1,5 +1,5 @@
 # PROYECTO 1 EDD 
-Este programa le permite al usuario visualizar un grafo de relaciones entre usuarios existentes de una red social, crear y eliminar usuarios y editar las relaciones entre ellos, especificaldo visualemente las "comunidades" entre los usuarios que se encuentran fuertemente conectados.
+Este programa le permite al usuario visualizar un grafo de relaciones entre usuarios existentes de una red social, crear y eliminar usuarios y editar las relaciones entre ellos, especificaldo visualmente las "comunidades" entre los usuarios que se encuentran fuertemente conectados.
 ## Integrantes
 - Bianca Zullo 31065119
 - Giancarlo Paolino 31464995
