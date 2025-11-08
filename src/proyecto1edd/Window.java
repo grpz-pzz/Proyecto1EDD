@@ -17,14 +17,27 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Window extends javax.swing.JFrame 
 {
-    private final DefaultListModel<String> modelList = new DefaultListModel<>();
+    public static Window window;
+    public DefaultListModel<String> modelList = new DefaultListModel<>();
     private boolean loadedFile = false;
     
     public Window() {
         initComponents();
+        window = this;
         allUsersDynamicList.setModel(modelList);
         savetxt.setEnabled(false);
         userGuide.setVisible(false);
+    }
+    
+    public void UpdateList()
+    {
+        modelList.clear();
+        Node<User> current = Database.getUsers().first();
+        while (current != null) {
+            User temp = current.getData();
+            modelList.addElement(temp.username);
+            current = current.getNext();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -208,12 +221,8 @@ public class Window extends javax.swing.JFrame
             
             File selectedFile = chooser.getSelectedFile();
             Database.Load(selectedFile);
-            Node<User> current = Database.getUsers().first();
-            while (current != null) {
-                User temp = current.getData();
-                modelList.addElement(temp.username);
-                current = current.getNext();
-            }
+
+            UpdateList();
             savetxt.setEnabled(true);
             loadedFile = true;
         }

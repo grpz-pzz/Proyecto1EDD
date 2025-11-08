@@ -112,7 +112,6 @@ public class CreateUser extends javax.swing.JFrame {
             }
             
             userM = new User(newUserName.getText());
-
             Database.addUser(userM);
         }
         else
@@ -126,7 +125,7 @@ public class CreateUser extends javax.swing.JFrame {
             User relationUser = Database.searchUser(s);
             userM.relations.insert(relationUser); 
         }
-        
+        Window.window.UpdateList();
         GraphManager.graphManager.UpdateGraph();
     }
 
