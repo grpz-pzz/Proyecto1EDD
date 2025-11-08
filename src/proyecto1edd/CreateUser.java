@@ -18,8 +18,8 @@ public class CreateUser extends javax.swing.JFrame {
      * Creates new window CreateUser
      */
     
-    private DefaultListModel<String> modelList = new DefaultListModel<>();
-    private DefaultListModel<String> modelList1 = new DefaultListModel<>();
+    private final DefaultListModel<String> modelList = new DefaultListModel<>();
+    private final DefaultListModel<String> modelList1 = new DefaultListModel<>();
     private User userM = null;
     
     /**
@@ -117,7 +117,7 @@ public class CreateUser extends javax.swing.JFrame {
         }
         else
         {
-            userM.relations = new List<User>();
+            userM.relations = new List<>();
         }
         
         for (int i = 0; i < modelList1.getSize(); i++) {
