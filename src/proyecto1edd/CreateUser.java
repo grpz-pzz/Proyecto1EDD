@@ -29,6 +29,10 @@ public class CreateUser extends javax.swing.JFrame {
     public CreateUser(String user)
     {
         initComponents();
+        
+        addRelationButton.setEnabled(false);
+        deleteRelationButton.setEnabled(false);
+        
         availableUserList.setModel(modelList);
         existingRelationsList.setModel(modelList1);
         
@@ -161,6 +165,11 @@ public class CreateUser extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         availableUserList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        availableUserList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                availableUserListMouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(availableUserList);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -234,6 +243,11 @@ public class CreateUser extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        existingRelationsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                existingRelationsListMouseReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(existingRelationsList);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -292,10 +306,12 @@ public class CreateUser extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addRelationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRelationButtonActionPerformed
+        addRelationButton.setEnabled(false);
         AddToRelationList();
     }//GEN-LAST:event_addRelationButtonActionPerformed
 
     private void deleteRelationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRelationButtonActionPerformed
+        deleteRelationButton.setEnabled(false);
         RemoveInRelationList();
     }//GEN-LAST:event_deleteRelationButtonActionPerformed
 
@@ -308,6 +324,14 @@ public class CreateUser extends javax.swing.JFrame {
         Accept();
         this.setVisible(false);
     }//GEN-LAST:event_acceptButtonActionPerformed
+
+    private void availableUserListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_availableUserListMouseReleased
+        addRelationButton.setEnabled(true);
+    }//GEN-LAST:event_availableUserListMouseReleased
+
+    private void existingRelationsListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_existingRelationsListMouseReleased
+        deleteRelationButton.setEnabled(true);
+    }//GEN-LAST:event_existingRelationsListMouseReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
