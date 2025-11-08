@@ -15,10 +15,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 
 
-public class Window extends javax.swing.JFrame {
-
-    private User selected;
-    private User selectedFirst;
+public class Window extends javax.swing.JFrame 
+{
     private final DefaultListModel<String> modelList = new DefaultListModel<>();
     private boolean loadedFile = false;
     
@@ -227,20 +225,12 @@ public class Window extends javax.swing.JFrame {
      * doesn't affect the functioning of the program
      */
     
-    boolean isSelected = false;
     private void allUsersDynamicListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_allUsersDynamicListMouseReleased
         int index = allUsersDynamicList.locationToIndex(evt.getPoint());
         if (index >= 0)
         {
-            String tempSelected = allUsersDynamicList.getModel().getElementAt(index);
-            selected = Database.searchUser(tempSelected);
-            if(!isSelected)
-            {
-                editButton.setEnabled(true);
-                deleteButton.setEnabled(true);
-            }          
-            isSelected = true;
-            System.out.println("Usuario seleccionado: " + selected.getUsername());
+            editButton.setEnabled(true);
+            deleteButton.setEnabled(true);
         }
     }//GEN-LAST:event_allUsersDynamicListMouseReleased
 
@@ -251,13 +241,12 @@ public class Window extends javax.swing.JFrame {
      * @param evt 
      */
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        if(selectedFirst == selected) {
-            selectedFirst = null;
-        }
-        GraphManager.graphManager.removeUserNode(selected);
-        modelList.removeElement(selected.getUsername());
-        Database.deleteUser(selected);
-        GraphManager.graphManager.executeKosarajuAlgorithm();
+        editButton.setEnabled(false);
+        deleteButton.setEnabled(false);
+        User delUser = Database.searchUser(allUsersDynamicList.getSelectedValue());
+        modelList.removeElement(delUser.username);
+        Database.deleteUser(delUser);
+        GraphManager.graphManager.UpdateGraph();
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     

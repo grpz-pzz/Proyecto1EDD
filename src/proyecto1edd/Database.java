@@ -60,6 +60,17 @@ public class Database
      */
     public static void deleteUser(User user){
         System.out.print("Eliminado " + user.getUsername());
+         Node<User> current = getUsers().first();
+        while (current != null) {
+            User userInList = current.getData();
+            
+            if(userInList.relations.contains(user)){
+                userInList.relations.delete(user);
+            }
+            
+            current = current.getNext();
+        }
+        
         getUsers().delete(user);
     }
 
@@ -69,7 +80,7 @@ public class Database
      * @return null
      */
     public static User searchUser(String targetUser) {
-        Node<User> current = Database.getUsers().first();
+        Node<User> current = getUsers().first();
         while (current != null) {
             User userInList = current.getData();
             if (targetUser.equals(userInList.getUsername())) {

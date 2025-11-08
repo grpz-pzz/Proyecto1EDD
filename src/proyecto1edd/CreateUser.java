@@ -104,6 +104,15 @@ public class CreateUser extends javax.swing.JFrame {
         if(userM == null)
         {
             userM = new User(newUserName.getText());
+
+            if(Database.searchUser(newUserName.getText()) != null)
+            {
+                JOptionPane.showMessageDialog(null, "Este usuario ya existe", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            userM = new User(newUserName.getText());
+
             Database.addUser(userM);
         }
         else
@@ -301,7 +310,6 @@ public class CreateUser extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_acceptButtonActionPerformed
 
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;

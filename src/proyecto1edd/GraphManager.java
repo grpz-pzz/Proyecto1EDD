@@ -27,12 +27,8 @@ public class GraphManager {
         System.setProperty("org.graphstream.ui", "swing");
         graphManager = this;
         graph = new SingleGraph("grafo");
-        Layout layout = new SpringBox(false);
-        layout.addAttributeSink(graph);
-        layout.setQuality(1.0);
-        layout.setForce(1.2);
-        graph.addSink(layout);
         graph.display();  
+        start();
     }
     
     /**
@@ -44,15 +40,22 @@ public class GraphManager {
      */
     public void start()
     {
-       
+        Layout layout = new SpringBox(false);
+        layout.addAttributeSink(graph);
+        layout.setQuality(1.0);
+        layout.setForce(1.2);
+        graph.addSink(layout);
+        
         graph.setAttribute("ui.stylesheet", 
                 "node { " +
                         "text-size: 20; " +
-                        "size: 60px; " + "}" + "sprite.cluster {" + 
+                        "size: 40px; " + "}" + "sprite.cluster {" + 
                         "z-index: 0;" + 
                         
                 "}"
         );
+        graph.setAttribute("ui.quality");
+        graph.setAttribute("ui.antialias");
         
         Node<User> current = Database.getUsers().first();
         while (current != null) {
